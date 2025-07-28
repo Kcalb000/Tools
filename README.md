@@ -7,4 +7,5 @@ For working application
     2. Add 2 new sheets and the name shoud be "Sheet2" and "Sheet3"
     3. Copy all content of BOM 1 and BOM 2 with format into the new created Excel "Sheet1" and "Sheet2"
     4. Press the "Alt+F11" open the VBA edit page
-    5.
+    5. Select the VBAProject (Excal file name) then click the right key of mouse "import file" select the BOM Compare.bas then close the page
+    6. Back to Excel file press "Alt+f8" run this "CompareSheets" macro processing
