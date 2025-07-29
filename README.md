@@ -16,7 +16,10 @@ For working application
    # Key Components Explained:
    
      1. 使用说明：
-          比较Sheet1和Sheet2的E列
+          如果不是从TEAMCENTER下载的标准BOM
+          请确保两份BOM中的C,D,E列为
+          12NC,Description,Reference(位号)
+          Processing会比较Sheet1和Sheet2的E列
           匹配时比较C列
           不匹配时导出C/D/E列到Sheet3
           Sheet1的F列显示结果状态
@@ -69,3 +72,141 @@ For working application
           添加工作表存在性检查
           处理空工作表情况
           此解决方案提供了全面的三表比对功能，直观的视觉标记（红色字体），以及清晰的比对结果输出，便于分析数据一致性。
+     3. 使用说明：
+          📌 Requirements
+Microsoft Excel (Windows version)
+
+Excel file with source data in "Sheet1"
+
+Macros enabled (enable when prompted)
+
+📋 Data Format Requirements
+Source sheet must be named "Sheet1" with these columns:
+
+Column	Header	Data Type
+A	Material Number	Text/Numeric
+B	Material Name	Text
+C	Reference Designator	Text (comma-sep)
+D	Package	Text
+E	Mounting Type	Text
+F	Quantity	Numeric
+G	Unit	Text
+Example Data:
+
+text
+A         B           C         D       E       F    G
+R001    Resistor    R1,R2    0805    SMT      2    pcs
+R001    Resistor    R3       0805    SMT      1    pcs
+C005    Capacitor   C1       0603    SMT      5    pcs
+⚙️ Installation
+Press ALT + F11 to open VBA Editor
+
+Right-click project name → Insert → Module
+
+Paste entire code into module window
+
+Close VBA Editor (ALT + Q)
+
+🔄 Running MergeBOM (Consolidate)
+Open workbook with source data
+
+Press ALT + F8 to open macro dialog
+
+Select MergeBOM
+
+Click Run
+
+Output:
+
+Creates "Merged BOM" sheet
+
+Combines identical materials
+
+Sums quantities
+
+Combines references with commas
+
+Example Result:
+
+text
+A         B           C           D       E       F    G
+R001    Resistor    R1,R2,R3    0805    SMT      3    pcs
+C005    Capacitor   C1          0603    SMT      5    pcs
+🔀 Running SplitBOM (Expand)
+Open workbook with source data
+
+Press ALT + F8 to open macro dialog
+
+Select SplitBOM
+
+Click Run
+
+Output:
+
+Creates "Split BOM" sheet
+
+Creates new row for each reference
+
+Divides quantity equally
+
+Example Result:
+
+text
+A         B           C       D       E       F    G
+R001    Resistor    R1      0805    SMT      1    pcs
+R001    Resistor    R2      0805    SMT      1    pcs
+R001    Resistor    R3      0805    SMT      1    pcs
+C005    Capacitor   C1      0603    SMT      5    pcs
+⚙️ Formatting Features
+All output sheets automatically get:
+
+Column A as numeric format
+
+All columns left-aligned
+
+Auto-adjusted column widths
+
+Header preservation from source
+
+⚠️ Important Notes
+Backup your data before running
+
+Delete existing "Merged BOM"/"Split BOM" sheets if you want fresh output
+
+Source sheet must be named exactly "Sheet1" (case-sensitive)
+
+For large datasets (>10,000 rows):
+
+Save work first
+
+Allow 10-30 seconds processing time
+
+Avoid interacting with Excel during operation
+
+🛠 Troubleshooting
+Problem: "Subscript out of range" error
+Solution: Ensure source sheet is named "Sheet1"
+
+Problem: Material numbers not merging
+Solution: Check for leading/trailing spaces in column A
+
+Problem: Quantities not dividing evenly
+Solution: Ensure column F contains numeric values
+
+Problem: Macros disabled
+Solution:
+
+File → Options → Trust Center → Trust Center Settings
+
+Macro Settings → Enable all macros
+
+Check "Trust access to VBA project object model"
+
+📥 Sample Files
+Download practice files:
+BOM_Tool_Sample.xlsm
+(Contains sample data and pre-installed macros)
+
+💡 Tip: Use CTRL + SHIFT + L to quickly toggle filters on output sheets for easier data analysis!
+
+
