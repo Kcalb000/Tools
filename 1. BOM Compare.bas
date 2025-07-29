@@ -5,6 +5,7 @@ Sub CompareSheets()
     Dim ws1 As Worksheet  ' Primary worksheet (source data)
     Dim ws2 As Worksheet  ' Comparison worksheet (target data)
     Dim ws3 As Worksheet  ' Output worksheet (mismatch results)
+    Dim sht As Worksheet  ' Temp worksheet variable
     
     ' Declare row counters
     Dim i As Long         ' Row index for Sheet1 (primary loop)
@@ -17,7 +18,20 @@ Sub CompareSheets()
     ' Set worksheet references
     Set ws1 = Sheets("Sheet1")
     Set ws2 = Sheets("Sheet2")
-    Set ws3 = Sheets("Sheet3")
+    
+    ' Check if Sheet3 exists, create if not
+    Set ws3 = Nothing
+    For Each sht In ThisWorkbook.Worksheets
+        If sht.Name = "Sheet3" Then
+            Set ws3 = sht
+            Exit For
+        End If
+    Next sht
+    
+    If ws3 Is Nothing Then
+        Set ws3 = Sheets.Add(After:=Sheets(Sheets.Count))
+        ws3.Name = "Sheet3"
+    End If
     
     ' Prepare Sheet3 for results
     ws3.Cells.Clear          ' Clear all existing data
