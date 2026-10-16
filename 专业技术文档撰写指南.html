@@ -1,0 +1,612 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="面向学术研究、工程技术与数据表的专业写作、排版和发布指南。">
+  <title>技术文档、学术研究与数据表制作指南</title>
+  <style>
+    :root {
+      --ink: #17212b;
+      --muted: #536473;
+      --paper: #ffffff;
+      --canvas: #eef3f7;
+      --navy: #103f5a;
+      --blue: #0f6e8c;
+      --teal: #007d78;
+      --gold: #a66500;
+      --rose: #a33a4a;
+      --line: #d8e1e8;
+      --soft-blue: #e9f5fa;
+      --soft-gold: #fff6e2;
+      --shadow: 0 16px 42px rgba(24, 48, 70, .10);
+    }
+    * { box-sizing: border-box; }
+    html { scroll-behavior: smooth; }
+    body {
+      margin: 0;
+      color: var(--ink);
+      background:
+        radial-gradient(circle at 10% 0%, rgba(55, 158, 184, .13), transparent 28rem),
+        linear-gradient(180deg, #f5f8fa 0, var(--canvas) 22rem, var(--canvas) 100%);
+      font-family: "Noto Sans CJK SC", "Microsoft YaHei UI", "Microsoft YaHei",
+        "PingFang SC", system-ui, sans-serif;
+      font-size: 16px;
+      line-height: 1.82;
+    }
+    .masthead {
+      color: #fff;
+      background: linear-gradient(118deg, #082d43 0%, #0d6078 54%, #0a817d 100%);
+      border-bottom: 4px solid #e7b14a;
+      padding: 3.8rem 1.5rem 3.2rem;
+    }
+    .masthead-inner, .layout { max-width: 1340px; margin: 0 auto; }
+    .eyebrow {
+      margin: 0 0 .8rem;
+      color: #ffe1a3;
+      font-size: .78rem;
+      font-weight: 800;
+      letter-spacing: .14em;
+      text-transform: uppercase;
+    }
+    .masthead h1 {
+      max-width: 1000px;
+      margin: 0;
+      color: #fff;
+      font-family: Georgia, "Noto Serif CJK SC", "Songti SC", serif;
+      font-size: clamp(2rem, 5vw, 3.8rem);
+      line-height: 1.2;
+      letter-spacing: .02em;
+    }
+    .masthead p {
+      max-width: 850px;
+      margin: 1.25rem 0 0;
+      color: #e3f2f5;
+      font-size: 1.08rem;
+    }
+    .actions { display: flex; flex-wrap: wrap; gap: .7rem; margin-top: 1.6rem; }
+    .action {
+      display: inline-flex;
+      align-items: center;
+      min-height: 2.4rem;
+      padding: .35rem .95rem;
+      color: #fff;
+      border: 1px solid rgba(255, 255, 255, .48);
+      border-radius: 999px;
+      font-size: .88rem;
+      font-weight: 700;
+      text-decoration: none;
+      background: rgba(255, 255, 255, .09);
+      cursor: pointer;
+    }
+    .action:hover { color: #082d43; background: #fff; }
+    .author-credit {
+      display: inline-flex;
+      flex-wrap: wrap;
+      gap: .35rem;
+      align-items: baseline;
+      margin: 1rem 0 0;
+      padding: .45rem .8rem;
+      color: #4d2146;
+      border: 1px solid #f1c6de;
+      border-radius: 999px;
+      background: #fff5fb;
+      font-size: .92rem;
+    }
+    .author-credit strong { color: #5b2851; }
+    .author-credit .author-name,
+    .author-credit a { color: deeppink; font-weight: 750; }
+    .author-credit a { text-decoration-color: rgba(255, 20, 147, .38); }
+    .author-credit a:hover { color: #a6005b; }
+    .layout {
+      display: grid;
+      grid-template-columns: minmax(220px, 272px) minmax(0, 1fr);
+      gap: 2rem;
+      padding: 2rem 1.5rem 4rem;
+      align-items: start;
+    }
+    .toc {
+      position: sticky;
+      top: 1.25rem;
+      padding: 1.2rem 1.2rem 1.25rem;
+      border: 1px solid var(--line);
+      border-radius: 14px;
+      background: rgba(255, 255, 255, .88);
+      box-shadow: 0 8px 22px rgba(25, 60, 80, .06);
+      backdrop-filter: blur(8px);
+    }
+    .toc-title { margin: 0 0 .65rem; color: var(--navy); font-size: .9rem; font-weight: 800; }
+    .toc ol { margin: 0; padding-left: 1.25rem; font-size: .88rem; line-height: 1.55; }
+    .toc li { margin: .45rem 0; padding-left: .12rem; }
+    .toc a { color: #31566b; text-decoration: none; }
+    .toc a:hover { color: var(--blue); text-decoration: underline; }
+    main {
+      min-width: 0;
+      padding: clamp(1.6rem, 4vw, 4.2rem);
+      border: 1px solid #e3e9ed;
+      border-radius: 18px;
+      background: var(--paper);
+      box-shadow: var(--shadow);
+    }
+    h1, h2, h3 { scroll-margin-top: 1.5rem; }
+    main > h1 { margin-top: 0; color: var(--navy); }
+    h2 {
+      margin: 3.6rem 0 1.25rem;
+      padding: .45rem 0 .45rem 1rem;
+      color: var(--navy);
+      border-left: 5px solid var(--teal);
+      font-size: clamp(1.45rem, 3vw, 2rem);
+      line-height: 1.32;
+    }
+    h2:nth-of-type(3n+1) { border-left-color: var(--blue); }
+    h2:nth-of-type(3n+2) { border-left-color: var(--gold); }
+    h3 {
+      margin: 2.2rem 0 .85rem;
+      color: var(--blue);
+      font-size: 1.24rem;
+      line-height: 1.45;
+    }
+    p { margin: 1rem 0; }
+    strong { color: #123f56; }
+    em { color: #625220; }
+    a { color: #006f91; text-decoration: underline; text-decoration-color: rgba(0, 111, 145, .36); text-underline-offset: .16em; }
+    a:hover { color: #a34f00; text-decoration-color: currentColor; }
+    blockquote {
+      margin: 1.5rem 0;
+      padding: 1rem 1.2rem;
+      color: #244d62;
+      border-left: 4px solid #d79a28;
+      border-radius: 0 10px 10px 0;
+      background: linear-gradient(90deg, var(--soft-gold), #fffdfa);
+      font-weight: 600;
+    }
+    hr { height: 1px; margin: 2.8rem 0; border: 0; background: linear-gradient(90deg, transparent, #b7cbd6, transparent); }
+    ul, ol { padding-left: 1.55rem; }
+    li { margin: .45rem 0; }
+    li::marker { color: var(--teal); font-weight: 800; }
+    .check-item { list-style: none; margin-left: -1.4rem; }
+    input[type="checkbox"] { accent-color: var(--teal); transform: translateY(1px); }
+    code {
+      padding: .12em .35em;
+      color: #8a320d;
+      border-radius: 4px;
+      background: #f8eee9;
+      font-family: "Cascadia Code", Consolas, monospace;
+      font-size: .9em;
+    }
+    .code-block {
+      overflow-x: auto;
+      margin: 1.35rem 0;
+      padding: 1.1rem 1.25rem;
+      color: #e8f2f5;
+      border: 1px solid #173f52;
+      border-radius: 10px;
+      background: #102b3a;
+      box-shadow: inset 0 1px 0 rgba(255,255,255,.08);
+    }
+    .code-block code { padding: 0; color: inherit; background: none; font-size: .87rem; line-height: 1.65; }
+    .table-wrap { overflow-x: auto; margin: 1.35rem 0 1.8rem; border: 1px solid var(--line); border-radius: 10px; }
+    table { width: 100%; border-collapse: collapse; font-size: .93rem; }
+    th, td { padding: .72rem .8rem; vertical-align: top; border-bottom: 1px solid var(--line); text-align: left; }
+    th { color: #fff; background: #155c75; font-weight: 750; line-height: 1.45; }
+    tr:nth-child(even) td { background: #f7fafb; }
+    tr:last-child td { border-bottom: 0; }
+    @media (max-width: 900px) {
+      .layout { grid-template-columns: 1fr; padding: 1rem; }
+      .toc { position: static; }
+      main { padding: 1.5rem; }
+      .masthead { padding: 2.8rem 1.25rem 2.5rem; }
+    }
+    @media print {
+      @page { size: A4; margin: 16mm 14mm 18mm; }
+      body { color: #000; background: #fff; font-size: 10.5pt; line-height: 1.55; }
+      .masthead { padding: 0 0 5mm; color: #000; border: 0; background: none; }
+      .masthead h1, .masthead p, .eyebrow { color: #000; }
+      .actions, .toc { display: none; }
+      .layout { display: block; max-width: none; padding: 0; }
+      main { padding: 0; border: 0; border-radius: 0; box-shadow: none; }
+      h2 { margin-top: 16mm; padding-left: 0; color: #000; border-left: 0; border-bottom: 1pt solid #000; page-break-after: avoid; }
+      h3 { color: #000; page-break-after: avoid; }
+      a { color: #000; text-decoration: none; }
+      a[href^="http"]::after { content: " (" attr(href) ")"; font-size: 8pt; overflow-wrap: anywhere; }
+      .table-wrap { overflow: visible; }
+      table { font-size: 8.7pt; }
+      th { color: #000; background: #eee; }
+      tr, img, pre, blockquote { break-inside: avoid; }
+      .code-block { color: #000; border: 1px solid #777; background: #f4f4f4; }
+      .code-block code { color: #000; }
+      code { color: #000; background: #eee; }
+    }
+    </style>
+</head>
+<body>
+  <header class="masthead">
+    <div class="masthead-inner">
+      <p class="eyebrow">Technical writing · Publishing · Engineering documentation</p>
+      <h1>专业技术文档、学术研究与数据表制作指南</h1>
+      <p>面向研究人员、开发者、工程师和技术写作者的可执行工作流：从结构化创作、国际标准和工程图表，到可复现交付与发布检查。</p>
+      <div class="actions">
+        <button class="action" type="button" onclick="window.print()">另存为 PDF</button>
+        <a class="action" href="How_to_build_professional_technology_article.md">Markdown 源稿</a>
+      </div>
+    </div>
+  </header>
+  <div class="layout">
+    <nav class="toc" aria-label="目录"><p class="toc-title">快速导航</p><ol><li><a href="#1-先选工作流不先选排版软件">先选工作流，不先选排版软件</a></li><li><a href="#2-按交付场景选择工具">按交付场景选择工具</a></li><li><a href="#3-学术论文与顶级期刊投稿">学术论文与顶级期刊投稿</a></li><li><a href="#4-工程技术文档与团队协作">工程技术文档与团队协作</a></li><li><a href="#5-元器件手册数据表与应用笔记">元器件手册、数据表与应用笔记</a></li><li><a href="#6-国际标准符号与单位">国际标准、符号与单位</a></li><li><a href="#7-图表原理图与波形图">图、表、原理图与波形图</a></li><li><a href="#8-元器件模型符号和封装库">元器件模型、符号和封装库</a></li><li><a href="#9-排版字体图片与-pdf-交付">排版、字体、图片与 PDF 交付</a></li><li><a href="#10-可复现评审与版本管理">可复现、评审与版本管理</a></li><li><a href="#11-发布前检查表">发布前检查表</a></li><li><a href="#12-权威资源">权威资源</a></li></ol></nav>
+    <main><h1 id="如何优雅的将文字信息思想放进pdf">如何优雅的将文字, 信息,思想放进 PDF</h1>
+<blockquote><strong>适用对象：</strong> 研究人员、开发者、硬件/软件工程师、技术写作者，以及需要交付可审查、可复现、可出版文档的团队。   <strong>核心原则：</strong> 内容正确优先于外观；结构化源文件优先于一次性排版；目标期刊、客户或法规的现行要求优先于本指南。   <strong>适用范围：</strong> 学术论文、工程技术报告、设计说明书、应用笔记（Application Note）、元器件手册（Datasheet）及其图表、原理图、波形图和控制框图。</blockquote>
+<p>专业文档不是“把文字放进 PDF”。它是一个可验证的工程交付物：读者应能辨识结论、追溯依据、理解符号、检查数据，并在需要时重新生成图表和版面。工具本身不会自动带来专业性；<strong>正确的文档类型、统一的样式系统、受控的源文件和严格的发布检查</strong>才会。</p>
+<hr>
+<h2 id="目录">目录</h2>
+<ol>
+<li>[先选工作流，不先选排版软件](#1-先选工作流不先选排版软件)</li>
+<li>[按交付场景选择工具](#2-按交付场景选择工具)</li>
+<li>[学术论文与顶级期刊投稿](#3-学术论文与顶级期刊投稿)</li>
+<li>[工程技术文档与团队协作](#4-工程技术文档与团队协作)</li>
+<li>[元器件手册、数据表与应用笔记](#5-元器件手册数据表与应用笔记)</li>
+<li>[国际标准、符号与单位](#6-国际标准符号与单位)</li>
+<li>[图、表、原理图与波形图](#7-图表原理图与波形图)</li>
+<li>[元器件模型、符号和封装库](#8-元器件模型符号和封装库)</li>
+<li>[排版、字体、图片与 PDF 交付](#9-排版字体图片与-pdf-交付)</li>
+<li>[可复现、评审与版本管理](#10-可复现评审与版本管理)</li>
+<li>[发布前检查表](#11-发布前检查表)</li>
+<li>[权威资源](#12-权威资源)</li>
+</ol>
+<hr>
+<h2 id="1-先选工作流不先选排版软件">1. 先选工作流，不先选排版软件</h2>
+<p>先回答四个问题，再决定工具：</p>
+<ol>
+<li><strong>谁是读者？</strong> 审稿人、电路设计/应用工程师、现场工程师、客户，还是维护团队？</li>
+<li><strong>交付什么？</strong> 一篇独立技术文章、持续维护的产品文档、上百页手册，还是一个受控的数据表系列？</li>
+<li><strong>版式与复用的复杂度多高？</strong> 是否有双栏公式、数百个交叉引用、多产品共用段落、寄存器表、修订标记和多语言发布？</li>
+<li><strong>谁负责更新与批准？</strong> 个人、研究课题组、小团队，还是需要审核、版本、权限和翻译工作流的组织？</li>
+</ol>
+<h3 id="11-三类成熟工作流">1.1 三类成熟工作流</h3>
+<div class="table-wrap"><table><thead><tr><th>工作流</th><th>典型源文件</th><th>适合对象</th><th>核心优势</th><th>不适合的情况</th></tr></thead><tbody><tr><td><strong>论文排版工作流</strong></td><td>LaTeX、期刊模板、<code>.bib</code>、图源</td><td>学术论文、会议投稿、数学/公式密集报告</td><td>引用、公式、编号、交叉引用稳定，可版本管理</td><td>需要大量非技术作者实时视觉编辑的文档</td></tr><tr><td><strong>轻量技术写作工作流</strong></td><td>Markdown/AsciiDoc + 图源 + CI</td><td>README、设计说明、软件文档、小型团队手册</td><td>简洁、易审阅、适合 Git</td><td>复杂书籍版式、严格分页、复用与合规要求很高的数据表</td></tr><tr><td><strong>结构化出版工作流</strong></td><td>DITA/XML + CCMS + 发布模板</td><td>产品文档、应用笔记库、手册系列、企业知识库</td><td>内容复用、单一来源、多格式发布、审核与翻译</td><td>一次性、篇幅短的个人文档</td></tr></tbody></table></div>
+<p><strong>关键判断：</strong> Markdown 是优秀的轻量源格式，而不是工业排版系统。若文档需要严格分页、复杂表格、受控内容复用、变更条、产品变体和多渠道发布，应使用结构化创作和出版流水线，而不是依赖 Markdown 转 PDF 的偶然效果。</p>
+<h3 id="12-单一来源发布single-sourcing">1.2 单一来源发布（Single Sourcing）</h3>
+<p>同一事实只保留一份受控源：型号名称、绝对最大额定值、引脚描述、订购信息、警告语和寄存器定义不应在多个文档中手工复制。通过变量、条件文本、内容引用和发布配置，按产品、修订版、语言或输出介质生成不同交付物。</p>
+<p>这对数据表尤其重要：一处参数变更必须能够定位到所有引用它的 PDF、HTML、应用笔记和产品页。</p>
+<hr>
+<h2 id="2-按交付场景选择工具">2. 按交付场景选择工具</h2>
+<h3 id="21-快速决策表">2.1 快速决策表</h3>
+<div class="table-wrap"><table><thead><tr><th>场景</th><th>推荐主工具</th><th>图形/数据工具</th><th>输出与管理</th><th>原因</th></tr></thead><tbody><tr><td>顶级期刊或会议论文</td><td>目标期刊的 LaTeX 模板；按投稿要求也可用 Word</td><td>Python/Matplotlib、MATLAB、Origin；Inkscape</td><td>PDF + 源码 + <code>.bib</code></td><td>公式、引用、双栏与编号一致，便于复现</td></tr><tr><td>学位论文、长篇研究报告</td><td>LaTeX；学校模板为 Word 时遵守学校模板</td><td>同上</td><td>PDF/A（若要求）+ 源码</td><td>目录、图表清单、交叉引用和参考文献稳定</td></tr><tr><td>软件/系统设计说明</td><td>Markdown 或 AsciiDoc；必要时 Sphinx、Antora</td><td>Mermaid、PlantUML、draw.io</td><td>Git + 静态站点/HTML/PDF</td><td>文本评审和持续更新效率高</td></tr><tr><td>中小型工程手册</td><td>Adobe FrameMaker、MadCap Flare、oXygen XML Editor</td><td>Visio、Inkscape、KiCad</td><td>PDF、HTML5</td><td>更强的长文档、交叉引用和模板控制</td></tr><tr><td>大型产品文档体系</td><td>DITA/XML + CCMS，例如 AEM Guides、Tridion Docs</td><td>统一资产库</td><td>自动化发布至 PDF/HTML5/门户</td><td>内容组件复用、审核、翻译、权限、版本</td></tr><tr><td>IC 数据表与应用笔记</td><td>结构化 XML/DITA 或企业模板；小团队可用 LaTeX</td><td>KiCad/Altium、Python、WaveDrom、Inkscape</td><td>受控 PDF + HTML/产品页</td><td>适配复杂表格、产品变体、修订与受控发布</td></tr><tr><td>PCB 设计文档</td><td>KiCad、Altium Designer、OrCAD Capture</td><td>原理图、PCB、仿真工具</td><td>原生工程文件 + PDF/SVG</td><td>原理图应从可检查的 EDA 工程导出</td></tr></tbody></table></div>
+<h3 id="22-工具不是标准">2.2 工具不是标准</h3>
+<p>不要因为某个文件来自 KiCad、Visio、LaTeX 或 InDesign，就假设它符合行业标准。标准性来自于：</p>
+<ul>
+<li>采用正确的符号、单位、术语和参考标号；</li>
+<li>使用经核验的制造商数据、原理图和测试记录；</li>
+<li>以目标发布方的模板和提交规则为准；</li>
+<li>经过同行或工程审核；</li>
+<li>保留可以追溯的源文件与修订记录。</li>
+</ul>
+<hr>
+<h2 id="3-学术论文与顶级期刊投稿">3. 学术论文与顶级期刊投稿</h2>
+<h3 id="31-先获取目标刊的官方模板">3.1 先获取目标刊的官方模板</h3>
+<p>每个期刊或会议都有自己的作者指南，页面尺寸、双栏规则、参考文献样式、图表格式、补充材料和匿名要求可能不同。不要从第三方网站随意复制模板，也不要把一个会议模板用于另一个期刊。</p>
+<p>对 IEEE 投稿，可从 <a href="https://template-selector.ieee.org/" target="_blank" rel="noopener noreferrer">IEEE Template Selector</a> 选择对应刊物或会议的官方 LaTeX/Word 模板；其他出版社同样应从目标刊的 Author Instructions 页面取得最新版要求。</p>
+<h3 id="32-推荐的论文工程结构">3.2 推荐的论文工程结构</h3>
+<pre class="code-block"><code class="language-text">paper/
+├── main.tex                 # 主入口，只组织内容
+├── sections/
+│   ├── introduction.tex
+│   ├── method.tex
+│   ├── results.tex
+│   └── conclusion.tex
+├── figures/
+│   ├── fig_architecture.pdf
+│   └── fig_results.pdf
+├── figure_source/
+│   ├── plot_results.py
+│   └── architecture.svg
+├── data/
+│   └── results.csv
+├── references.bib
+├── Makefile                 # 或 latexmk/CI 构建脚本
+└── README.md                # 构建环境、数据来源与复现说明</code></pre>
+<p>将正文、参考文献、图形源和数据分开。生成的 PDF、辅助文件和临时文件不应成为唯一的工作副本。</p>
+<h3 id="33-论文写作和排版要点">3.3 论文写作和排版要点</h3>
+<ul>
+<li>使用模板定义的标题、作者、摘要、关键词、章节和参考文献命令；不要手调字体、边距、行距或页眉来“看起来更好”。</li>
+<li>所有图、表、方程、节和文献都使用标签与交叉引用。禁止手写“见图 3”或“参考文献 [12]”。</li>
+<li>每个图表应有独立结论：图注说明对象、条件、单位、数据来源和关键符号；表注说明测试条件、缩写和统计含义。</li>
+<li>定量主张必须可追溯到实验、仿真、公开数据或推导。准确区分 measured、simulated、calculated 和 illustrative。</li>
+<li>统计结果要说明样本量、误差条含义、置信区间/标准差/标准误的定义，以及数据排除或处理规则。</li>
+<li>使用文献管理器维护 <code>.bib</code> 数据库；提交前核对 DOI、作者、题名、年份、卷期和引用格式。</li>
+<li>最终以目标期刊的 PDF 检查器、投稿系统预览和作者指南为准。</li>
+</ul>
+<h3 id="34-latex-与-word-的边界">3.4 LaTeX 与 Word 的边界</h3>
+<p>LaTeX 特别适合公式、参考文献、复杂编号、双栏和可复现构建；Word 在期刊明确提供并要求 Word 模板、或多人必须使用修订模式共同编辑时同样合适。<strong>格式要求决定工具，不是个人偏好。</strong></p>
+<p>无论采用哪种工具，都应使用样式（Styles）而非手工加粗、空格、回车和 Tab 来模拟标题、缩进或编号。</p>
+<hr>
+<h2 id="4-工程技术文档与团队协作">4. 工程技术文档与团队协作</h2>
+<h3 id="41-适合轻量文档的-git-工作流">4.1 适合轻量文档的 Git 工作流</h3>
+<p>对于接口文档、架构说明、软件设计、实验记录和内部工程规范，可将 Markdown/AsciiDoc 置于 Git 中：</p>
+<ul>
+<li>正文、图源、脚本和数据一起评审；</li>
+<li>用 Mermaid/PlantUML 保存可读的文本化图源；</li>
+<li>用 CI 构建 HTML、PDF 或静态站点；</li>
+<li>用链接检查、拼写检查、文档构建检查阻止失效发布；</li>
+<li>对每个版本打标签，并记录兼容性与发布日期。</li>
+</ul>
+<p>此工作流适用于内容结构较简单、可接受浏览器/渲染器差异的文档。重要图形应在发布前导出为稳定的 SVG/PDF/PNG，并在实际阅读环境中检查。</p>
+<h3 id="42-适合长期产品文档的结构化写作">4.2 适合长期产品文档的结构化写作</h3>
+<p>当团队面对多个产品型号、反复复用的安全警告、寄存器描述、参数表、程序步骤和多语言交付时，采用 DITA/XML 与 CCMS（组件内容管理系统）通常更稳健。</p>
+<p>常见工具角色如下：</p>
+<div class="table-wrap"><table><thead><tr><th>角色</th><th>工具示例</th><th>作用</th></tr></thead><tbody><tr><td>结构化编辑</td><td>Adobe FrameMaker、oXygen XML Editor、XMetaL</td><td>依照 Schema/DTD 创作受约束的 XML 内容</td></tr><tr><td>内容管理</td><td>AEM Guides、Tridion Docs、MadCap IXIA 等 CCMS</td><td>组件复用、版本、权限、审核、翻译与检索</td></tr><tr><td>发布引擎</td><td>DITA Open Toolkit、Antenna House Formatter、厂商发布服务</td><td>将结构化源稳定转换为 PDF、HTML5、EPUB 等</td></tr><tr><td>视觉模板</td><td>样式表、PDF 模板、品牌资产库</td><td>统一字体、页眉页脚、表格、警告和封面</td></tr></tbody></table></div>
+<p>DITA 的 <code>topic</code> 与 <code>map</code> 模型将概念、任务和参考信息拆分为可复用主题，再由地图组装为手册或产品页面。不要把“结构化”误解为把 Word 文件导出为 XML；它要求内容模型、模板、版本和发布流程共同受控。</p>
+<h3 id="43-文档中的工程事实">4.3 文档中的工程事实</h3>
+<p>工程文档应显式区分：</p>
+<ul>
+<li><strong>需求（shall）</strong>：必须满足的约束；</li>
+<li><strong>设计（design）</strong>：当前实现如何满足需求；</li>
+<li><strong>验证（verification）</strong>：以测试、分析、检验或演示证明结果；</li>
+<li><strong>假设与限制（assumptions/limitations）</strong>：适用范围、环境、版本和未覆盖情形；</li>
+<li><strong>示例（example）</strong>：帮助理解，不可被误读为完整规范。</li>
+</ul>
+<p>避免“通常可用”“性能良好”“支持高速”等不可验证表述。给出条件、界限、版本、单位、测量方法和证据位置。</p>
+<hr>
+<h2 id="5-元器件手册数据表与应用笔记">5. 元器件手册、数据表与应用笔记</h2>
+<h3 id="51-数据表的目标不是产品介绍">5.1 数据表的目标不是“产品介绍”</h3>
+<p>数据表是工程决策依据，应让读者在不依赖销售材料的情况下判断：器件能否在指定条件下安全、稳定、可重复地工作。数据表中的数字、条件和术语必须互相一致，并可追溯到批准的测试/仿真记录。</p>
+<h3 id="52-推荐的信息架构">5.2 推荐的信息架构</h3>
+<p>以下结构适合大多数模拟、数字、混合信号和功率器件；具体顺序应服从企业模板与产品类型。</p>
+<ol>
+<li>文档控制：标题、料号、修订版、发布日期、版权/保密等级</li>
+<li>概述：产品定位、简短特性列表、典型应用</li>
+<li>功能框图与封装/引脚图</li>
+<li>引脚功能、引脚类型、未用引脚处理与散热焊盘说明</li>
+<li>订购信息、封装选项、标记规则与环保/合规信息</li>
+<li><strong>绝对最大额定值</strong>（Absolute Maximum Ratings）</li>
+<li><strong>推荐工作条件</strong>（Recommended Operating Conditions）</li>
+<li>电气特性表：最小值、典型值、最大值、单位、测试条件、脚注</li>
+<li>时序/交流特性、开关特性或典型性能曲线</li>
+<li>功能描述、状态表、真值表、时序图、寄存器说明（如适用）</li>
+<li>应用信息：典型电路、布局、去耦、热设计、EMI/ESD 注意事项</li>
+<li>封装机械尺寸、焊接/存储信息或对其权威文件的引用</li>
+<li>修订历史和法律声明</li>
+</ol>
+<h3 id="53-绝对最大额定值不等于工作规格">5.3 绝对最大额定值不等于工作规格</h3>
+<p>必须明确区分：</p>
+<ul>
+<li><strong>绝对最大额定值：</strong> 超过可能导致永久损伤的边界，不能当作常规工作点；</li>
+<li><strong>推荐工作条件：</strong> 保证功能/规格所允许的工作范围；</li>
+<li><strong>电气特性：</strong> 在表中列明的测试条件下测得或保证的参数；</li>
+<li><strong>典型特性曲线：</strong> 用于理解趋势，除非明确说明，否则不应被表述为逐台保证值。</li>
+</ul>
+<p>每一行参数都要包含足够的信息：参数名、符号、最小/典型/最大值、单位、温度/电压/负载/频率等条件、必要脚注，以及保证或表征性质。没有条件的“典型值”通常没有工程意义。</p>
+<h3 id="54-数据表与应用笔记的图形来源">5.4 数据表与应用笔记的图形来源</h3>
+<div class="table-wrap"><table><thead><tr><th>内容</th><th>首选来源</th><th>不建议的做法</th></tr></thead><tbody><tr><td>引脚图、封装图</td><td>经批准的封装/机械数据库</td><td>手工重绘后不核对引脚号和尺寸</td></tr><tr><td>原理图</td><td>EDA 原生工程导出的受控图</td><td>截图或用演示软件临时拼接</td></tr><tr><td>曲线与表格</td><td>原始测试数据、仿真数据和可复现脚本</td><td>在图像编辑器中手工改曲线</td></tr><tr><td>时序图/状态图</td><td>经过评审的协议或 RTL/验证规范</td><td>把概念时序图当成保证时序</td></tr><tr><td>控制框图</td><td>经设计审核的系统架构</td><td>用装饰性图标替代接口和信号含义</td></tr></tbody></table></div>
+<h3 id="55-受控发布建议">5.5 受控发布建议</h3>
+<p>对正式发布的数据表，至少应建立以下控制：</p>
+<ul>
+<li>文档编号、产品/硅版本、修订号、发布日期和变更摘要；</li>
+<li>参数表、引脚表和订购信息的唯一权威来源；</li>
+<li>技术、质量、产品和法务（若适用）的批准责任；</li>
+<li>发布前的数字、单位、交叉引用、图号、封装和料号核对；</li>
+<li>旧版本归档、撤回和客户可见性规则；</li>
+<li>可机器读取的原始表格数据，避免把 PDF 当作唯一数据库。</li>
+</ul>
+<hr>
+<h2 id="6-国际标准符号与单位">6. 国际标准、符号与单位</h2>
+<h3 id="61-标准的使用原则">6.1 标准的使用原则</h3>
+<p>标准需按合同、地区、行业和发布要求选择；不可把某一标准说成适用于所有电路图或所有产品。以下是常用的权威起点，而非完整合规清单：</p>
+<div class="table-wrap"><table><thead><tr><th>主题</th><th>常用标准/机构</th><th>在文档中的用途</th></tr></thead><tbody><tr><td>电气图形符号</td><td><a href="https://webstore.iec.ch/en/publication/2723" target="_blank" rel="noopener noreferrer">IEC 60617</a></td><td>电工和电子图中的图形符号数据库</td></tr><tr><td>系统与设备参考标识</td><td>IEC/ISO 81346 系列</td><td>系统、产品和部件的参考代号结构</td></tr><tr><td>国际单位制</td><td><a href="https://www.bipm.org/en/publications/si-brochure" target="_blank" rel="noopener noreferrer">BIPM SI Brochure</a></td><td>单位、词头、量和单位书写</td></tr><tr><td>PCB 封装与焊盘</td><td>IPC-7351 系列及企业封装规范</td><td>表面贴装焊盘/封装库设计</td></tr><tr><td>半导体产品要求</td><td>JEDEC、AEC-Q、IEC/ISO 或客户规范</td><td>依器件类别定义可靠性、测试、标识等要求</td></tr></tbody></table></div>
+<p>购买或引用标准时应使用其现行版本，并核实授权范围。标准库提供的符号不替代产品专用引脚定义、应用限制或 EDA 电气规则检查。</p>
+<h3 id="62-原理图符号与参考标号">6.2 原理图符号与参考标号</h3>
+<p>在同一份文档或项目中保持一致：</p>
+<ul>
+<li>电阻：<code>R1</code>、<code>R2</code>；电容：<code>C1</code>；电感：<code>L1</code>；二极管：<code>D1</code>；</li>
+<li>晶体管/离散 MOSFET：<code>Q1</code>（企业规范可能另有定义）；</li>
+<li>集成电路：<code>U1</code> 或企业定义的前缀；</li>
+<li>连接器：<code>J1</code>；测试点：<code>TP1</code>；保险丝：<code>F1</code>；开关：<code>SW1</code>；</li>
+<li>运放、比较器、SR 触发器等通常作为其所在 IC 或逻辑单元的功能符号，而不是仅凭名称猜测引脚和极性。</li>
+</ul>
+<p>必须显示或明确引用以下信息：参考标号、关键数值/料号、引脚编号、网络名、极性、电源/地、逻辑有效电平和连接点。导线交叉时使用清晰连接点；避免四向交叉让读者猜测是否连通。</p>
+<h3 id="63-si-单位和数字格式">6.3 SI 单位和数字格式</h3>
+<ul>
+<li>数值与单位之间留一个空格：<code>10 kΩ</code>、<code>3.3 V</code>、<code>25 °C</code>、<code>1 µs</code>；百分号通常写作 <code>10 %</code>，但以目标期刊样式为准。</li>
+<li>单位符号不加复数：<code>10 V</code>，不是 <code>10 Vs</code>。</li>
+<li>区分大小写：<code>m</code>（milli）与 <code>M</code>（mega）、<code>pF</code> 与 <code>PF</code>、<code>Hz</code> 与 <code>hz</code>。</li>
+<li>使用标准 <code>µ</code>（micro）或在工具链不可靠时统一采用 <code>u</code>，但不得混用。</li>
+<li>变量以斜体、单位以正体是许多科技排版的常见约定；具体服从目标模板。</li>
+<li>有效数字应与不确定度和测量能力匹配。不要报告超过数据支撑精度的尾数。</li>
+</ul>
+<hr>
+<h2 id="7-图表原理图与波形图">7. 图、表、原理图与波形图</h2>
+<h3 id="71-一张图只承担一个主要任务">7.1 一张图只承担一个主要任务</h3>
+<div class="table-wrap"><table><thead><tr><th>读者的问题</th><th>合适图形</th><th>必须清楚表达</th></tr></thead><tbody><tr><td>哪些元件电气连接？</td><td>原理图</td><td>元件、引脚、网络、方向、连接关系</td></tr><tr><td>系统由哪些功能组成？</td><td>控制/系统框图</td><td>功能边界、接口、数据或控制流向</td></tr><tr><td>信号何时变化？</td><td>数字时序图</td><td>基准时间、边沿、有效窗口、总线值、条件</td></tr><tr><td>模拟信号实际如何变化？</td><td>数据曲线/波形图</td><td>坐标轴、单位、范围、采样/处理、误差</td></tr><tr><td>消息和操作顺序是什么？</td><td>序列图</td><td>参与者、消息方向、顺序、条件、同步语义</td></tr></tbody></table></div>
+<p>不要用装饰性框图代替可复现的原理图；也不要把序列图误读为量化时序保证。</p>
+<h3 id="72-原理图">7.2 原理图</h3>
+<p><strong>首选工具：</strong> KiCad、Altium Designer、OrCAD Capture 等 EDA 工具。用于论文或说明性插图时，Schemdraw 可生成可版本控制的图，但不应替代正式电气设计与 ERC 检查。</p>
+<p>原理图要求：</p>
+<ul>
+<li>主信号流通常从左到右、从上到下；相关功能分组；</li>
+<li>明确电源、地、输入、输出、反馈与关键测试点；</li>
+<li>用网络标签减少长线和交叉，但标签必须一致；</li>
+<li>核对极性、引脚号、单位、多单元器件和电源单元；</li>
+<li>对正式设计运行 ERC，并用网表/PCB/制造商数据复核；</li>
+<li>从矢量源导出 SVG/PDF，避免屏幕截图。</li>
+</ul>
+<h3 id="73-波形曲线和统计图">7.3 波形、曲线和统计图</h3>
+<p><strong>首选工具：</strong> Python + Matplotlib、MATLAB、Origin、LabVIEW 或经过验证的仿真/测试软件。</p>
+<ul>
+<li>坐标轴必须有物理量和单位，例如 <code>Voltage (V)</code>、<code>Time (µs)</code>；</li>
+<li>曲线用图例或直接标注，说明测量/仿真条件；</li>
+<li>对比图使用一致坐标尺度；不同尺度必须显著标注；</li>
+<li>说明滤波、平均、插值、归一化和数据截取；</li>
+<li>误差条要定义为标准差、标准误、置信区间或其他量；</li>
+<li>生成脚本、原始数据和固定随机种子（若适用）应可追溯。</li>
+</ul>
+<h3 id="74-数字时序图">7.4 数字时序图</h3>
+<p><strong>首选工具：</strong> <a href="https://wavedrom.com/" target="_blank" rel="noopener noreferrer">WaveDrom</a>、GTKWave（从仿真波形导出）、EDA 验证工具；概念图可用 Inkscape 完成最后标注。</p>
+<ul>
+<li>标明时间单位或明确标为“非按比例的概念图”；</li>
+<li>清楚表达 active-low 信号（上划线、<code>_n</code> 后缀或文字说明）；</li>
+<li>必要时标出 setup、hold、propagation delay、采样边沿和 valid window；</li>
+<li>总线值放在有效区间中部；<code>X</code>、<code>Z</code>、don't care 的图例应统一；</li>
+<li>概念图不能冒充测试结果或数据表保证时序。</li>
+</ul>
+<h3 id="75-控制框图和序列图">7.5 控制框图和序列图</h3>
+<p><strong>框图：</strong> 用 Inkscape、Visio、diagrams.net 或企业图形模板制作。箭头必须有方向和含义，方框表示功能边界而非装饰。接口应标明名称、位宽、协议、时钟域或关键约束（按读者需要取舍）。</p>
+<p><strong>序列图：</strong> Mermaid 或 PlantUML 适合文本化、版本化的协议文档；用 <code>alt</code>、<code>opt</code>、<code>loop</code> 和同步/异步箭头表达逻辑，不要用它替代实测延迟或状态机。</p>
+<h3 id="76-表格">7.6 表格</h3>
+<p>表格是数据表中最容易产生发布事故的部分：</p>
+<ul>
+<li>每列标示物理量、符号和单位；单位不重复塞进每个单元格；</li>
+<li>测试条件应紧邻参数，或由清晰列/脚注引用；</li>
+<li>最小、典型、最大值不得错位；<code>—</code>、<code>N/A</code>、空白和 <code>TBD</code> 的含义应明确；</li>
+<li>避免合并单元格过多，保证 PDF、HTML、屏幕阅读器和表格导出可读；</li>
+<li>将源数据保存在 CSV、数据库或受控表格中，版面表格只是一个发布视图。</li>
+</ul>
+<hr>
+<h2 id="8-元器件模型符号和封装库">8. 元器件模型、符号和封装库</h2>
+<h3 id="81-获取顺序制造商优先库文件其次">8.1 获取顺序：制造商优先，库文件其次</h3>
+<p>对运放、比较器、SR 触发器、电容、MOSFET、三极管及其他器件，建议按以下顺序获取资料：</p>
+<ol>
+<li><strong>制造商官网的最新数据表、封装图、IBIS/SPICE/Verilog-A 模型和参考设计。</strong></li>
+<li><strong>制造商官方 EDA 库</strong>，并确认器件修订、封装与数据表一致。</li>
+<li><strong>EDA 工具的官方库</strong>，例如 <a href="https://www.kicad.org/libraries/" target="_blank" rel="noopener noreferrer">KiCad 官方库</a>。</li>
+<li><a href="https://www.snapeda.com/" target="_blank" rel="noopener noreferrer">SnapEDA</a> 与 <a href="https://www.ultralibrarian.com/" target="_blank" rel="noopener noreferrer">Ultra Librarian</a> 等第三方库，用于提高覆盖率。</li>
+<li>自建并经过内部审核的库。</li>
+</ol>
+<p>第三方库是起点，不是批准依据。下载后仍必须核对符号引脚号、引脚类型、封装焊盘、3D 模型、引脚 1 标识、间距、散热焊盘和制造商数据表版本。</p>
+<h3 id="82-按资源类型选择来源">8.2 按资源类型选择来源</h3>
+<div class="table-wrap"><table><thead><tr><th>需要的资源</th><th>推荐来源</th><th>必做验证</th></tr></thead><tbody><tr><td>通用图形符号</td><td>IEC 60617 或企业批准符号库</td><td>适用标准、符号方向和语义</td></tr><tr><td>具体 IC 的符号/封装</td><td>制造商、KiCad 官方库、第三方 CAD 库</td><td>型号、封装、引脚号/名、NC/EP 引脚</td></tr><tr><td>SPICE 模型</td><td>制造商模型与模型说明</td><td>仿真器兼容性、模型范围、温度/工艺假设</td></tr><tr><td>IBIS 模型</td><td>制造商</td><td>引脚映射、版本、驱动/负载条件</td></tr><tr><td>FPGA/数字 IP 符号</td><td>器件/EDA 厂商与项目规范</td><td>电源域、配置脚、逻辑电平、版本</td></tr><tr><td>机械封装尺寸</td><td>制造商封装图、批准的封装库</td><td>单位、公差、焊盘建议、修订版</td></tr></tbody></table></div>
+<h3 id="83-库审核清单">8.3 库审核清单</h3>
+<ul>
+<li class="check-item"><input type="checkbox" disabled> 型号、后缀、封装名称和数据表修订版完全匹配。</li>
+<li class="check-item"><input type="checkbox" disabled> 符号的每个引脚号、名称、方向和电气类型已对照数据表。</li>
+<li class="check-item"><input type="checkbox" disabled> 多单元器件、隐藏电源脚、裸露焊盘和 NC 引脚已正确处理。</li>
+<li class="check-item"><input type="checkbox" disabled> Footprint 的引脚 1、焊盘编号、间距、孔径/形状和热焊盘正确。</li>
+<li class="check-item"><input type="checkbox" disabled> 3D 模型仅用于可视化，不替代机械图审核。</li>
+<li class="check-item"><input type="checkbox" disabled> 已运行 ERC/DRC，并完成原理图到 PCB 的网表一致性检查。</li>
+<li class="check-item"><input type="checkbox" disabled> 库文件的来源、版本、许可证和审核人可追溯。</li>
+</ul>
+<hr>
+<h2 id="9-排版字体图片与-pdf-交付">9. 排版、字体、图片与 PDF 交付</h2>
+<h3 id="91-样式先行">9.1 样式先行</h3>
+<p>建立并锁定以下样式，而不是手工调整每一段：</p>
+<ul>
+<li>正文、标题 1–3、图注、表注、代码、引用、警告、列表；</li>
+<li>图表编号、交叉引用和脚注；</li>
+<li>表头、单位行、交替底纹（如有）；</li>
+<li>颜色、线宽、箭头、面板标签和品牌元素。</li>
+</ul>
+<p>一个专业模板应使内容作者只负责语义层次；他们不需要反复决定字号、段前距和编号格式。</p>
+<h3 id="92-字体和数学公式">9.2 字体和数学公式</h3>
+<ul>
+<li>优先使用目标期刊、企业品牌或发布系统指定字体。</li>
+<li>正文、图注、表格和图内文字使用有限、统一的字体族；图中的字体必须在最终尺寸可读。</li>
+<li>发布前检查 PDF 是否嵌入字体、是否发生替换、数学符号是否损坏。</li>
+<li>数学公式使用 MathType、LaTeX 数学模式或编辑器内建公式功能；不要用截图、普通字符或手工空格伪造公式。</li>
+<li>变量、向量、矩阵、函数和单位的排版规范必须在全文一致，并服从目标模板。</li>
+</ul>
+<h3 id="93-图片格式">9.3 图片格式</h3>
+<div class="table-wrap"><table><thead><tr><th>类型</th><th>优先格式</th><th>原因</th><th>注意事项</th></tr></thead><tbody><tr><td>原理图、框图、曲线、时序图、文字密集图</td><td>SVG、PDF、EPS（仅在要求时）</td><td>矢量缩放清晰</td><td>检查字体嵌入、裁剪框、透明度和投稿系统兼容性</td></tr><tr><td>照片、显微图、热像图</td><td>TIFF、PNG 或期刊指定格式</td><td>保留像素数据</td><td>按最终印刷尺寸与期刊要求导出</td></tr><tr><td>网页或演示图</td><td>SVG、PNG</td><td>浏览器兼容性较好</td><td>不将低分辨率截图用于印刷</td></tr><tr><td>复合多面板图</td><td>各面板保留原始源，最终用 PDF/SVG 组装</td><td>可追溯、易修改</td><td>面板字号、线宽、坐标尺度统一</td></tr></tbody></table></div>
+<p>不要将 JPEG 用于线条、文本和原理图；压缩伪影会损害边缘和小字。DPI 不是质量保证：像素尺寸、最终物理尺寸、内容类型和投稿系统要求共同决定是否合格。</p>
+<h3 id="94-版面质量控制">9.4 版面质量控制</h3>
+<ul>
+<li>在<strong>最终栏目宽度/纸张尺寸</strong>检查图表，而不是只在大屏幕上放大查看。</li>
+<li>检查页码、目录、页眉页脚、孤行/寡行、表格跨页、图表浮动、裁切和链接。</li>
+<li>导出后在独立 PDF 阅读器中检查：字体、颜色、透明度、超链接、书签、图层和打印效果。</li>
+<li>需要长期归档时，遵守接收方要求的 PDF/A 级别；不要自行假定所有 PDF/A 配置都适用。</li>
+<li>使用印刷或灰度预览，确保颜色不是唯一编码方式。</li>
+</ul>
+<hr>
+<h2 id="10-可复现评审与版本管理">10. 可复现、评审与版本管理</h2>
+<h3 id="101-推荐目录">10.1 推荐目录</h3>
+<pre class="code-block"><code class="language-text">technical-document/
+├── source/                  # LaTeX、DITA/XML、Markdown 或其他正文源
+├── figures/
+│   └── final/               # 受控的发布图
+├── figure_source/           # .kicad_sch、.svg、.mmd、.puml、绘图脚本
+├── data/                    # 原始/处理后数据；附 README 描述来源
+├── libraries/               # 经批准的符号、封装或模板（注明来源和许可）
+├── build/                   # 可再生输出；通常不作为唯一源
+├── scripts/                 # 构建、转换和检查脚本
+├── CHANGELOG.md
+└── README.md</code></pre>
+<p>敏感测试数据、未发布设计、许可证受限模型和客户资料必须放在符合访问控制要求的位置；不要因为“方便复现”而提交到公开仓库。</p>
+<h3 id="102-审核分层">10.2 审核分层</h3>
+<div class="table-wrap"><table><thead><tr><th>审核层</th><th>应检查的内容</th><th>推荐审核者</th></tr></thead><tbody><tr><td>技术审核</td><td>电路、推导、数据、条件、结论和风险</td><td>领域工程师/研究合作者</td></tr><tr><td>文档审核</td><td>结构、术语、交叉引用、歧义、可读性</td><td>技术写作者或非作者读者</td></tr><tr><td>图形审核</td><td>符号、单位、可读性、颜色、最终尺寸</td><td>图表作者 + 独立审阅者</td></tr><tr><td>发布审核</td><td>模板、文件格式、版权、版本、批准记录</td><td>文档负责人/发布负责人</td></tr></tbody></table></div>
+<p>不要让同一个人只看版面就批准全部内容。视觉正确不代表电气、统计或法规正确。</p>
+<h3 id="103-自动化检查">10.3 自动化检查</h3>
+<p>可用 CI 自动执行以下低风险检查：</p>
+<ul>
+<li>构建 LaTeX/DITA/站点并使构建失败可见；</li>
+<li>检查未解析的交叉引用、缺失图文件和失效链接；</li>
+<li>对文档源进行拼写、术语、Markdown/代码块格式检查；</li>
+<li>生成图表并检测工作区是否有未提交的生成差异；</li>
+<li>对 CSV/表格执行范围、单位或列完整性校验；</li>
+<li>为 PDF 输出页数、文件名、版本和元数据报告。</li>
+</ul>
+<p>自动化不能取代对测试条件、器件参数、原理图连通性和科学结论的人工专业审核。</p>
+<hr>
+<h2 id="11-发布前检查表">11. 发布前检查表</h2>
+<h3 id="内容与证据">内容与证据</h3>
+<ul>
+<li class="check-item"><input type="checkbox" disabled> 读者、适用范围、版本和关键结论清楚。</li>
+<li class="check-item"><input type="checkbox" disabled> 每项技术主张都有可定位的设计、测试、仿真、推导或权威来源。</li>
+<li class="check-item"><input type="checkbox" disabled> 已区分保证值、典型值、仿真值、测量值和示意图。</li>
+<li class="check-item"><input type="checkbox" disabled> 假设、限制、环境条件和例外已明确。</li>
+</ul>
+<h3 id="符号单位与图表">符号、单位与图表</h3>
+<ul>
+<li class="check-item"><input type="checkbox" disabled> 符号、参考标号、缩写、变量和术语全文一致。</li>
+<li class="check-item"><input type="checkbox" disabled> 数值、单位、有效数字和温度/电压/负载条件正确。</li>
+<li class="check-item"><input type="checkbox" disabled> 原理图的引脚、极性、网络、连接点和料号已与权威源核对。</li>
+<li class="check-item"><input type="checkbox" disabled> 图表在最终尺寸仍清晰；坐标轴、图例、图注和面板标识完整。</li>
+<li class="check-item"><input type="checkbox" disabled> 不依赖颜色传递关键语义；灰度/打印预览可理解。</li>
+</ul>
+<h3 id="数据表与产品资料">数据表与产品资料</h3>
+<ul>
+<li class="check-item"><input type="checkbox" disabled> 绝对最大额定值、推荐工作条件和电气特性没有混淆。</li>
+<li class="check-item"><input type="checkbox" disabled> 表格的 Min/Typ/Max、单位、脚注和测试条件无错位。</li>
+<li class="check-item"><input type="checkbox" disabled> 引脚表、封装图、订购信息和料号与当前批准版本一致。</li>
+<li class="check-item"><input type="checkbox" disabled> 修订历史准确说明了面向读者的实质变化。</li>
+</ul>
+<h3 id="文件与发布">文件与发布</h3>
+<ul>
+<li class="check-item"><input type="checkbox" disabled> 使用了目标期刊、客户或组织的当前模板和提交要求。</li>
+<li class="check-item"><input type="checkbox" disabled> PDF 已独立打开检查；字体、图像、链接和裁切正常。</li>
+<li class="check-item"><input type="checkbox" disabled> 源文件、数据、图源、脚本和第三方资产许可证可追溯。</li>
+<li class="check-item"><input type="checkbox" disabled> 机密、个人信息、内部路径、批注和隐藏图层已清除或按策略保留。</li>
+<li class="check-item"><input type="checkbox" disabled> 已完成规定的技术、文档和发布批准。</li>
+</ul>
+<hr>
+<h2 id="12-权威资源">12. 权威资源</h2>
+<h3 id="写作模板与结构化出版">写作、模板与结构化出版</h3>
+<ul>
+<li><a href="https://journals.ieeeauthorcenter.ieee.org/create-your-ieee-journal-article/authoring-tools-and-templates/tools-for-ieee-authors/ieee-article-templates/" target="_blank" rel="noopener noreferrer">IEEE Author Center — Article Templates</a>：IEEE 期刊文章模板与作者工具。</li>
+<li><a href="https://template-selector.ieee.org/" target="_blank" rel="noopener noreferrer">IEEE Template Selector</a>：按具体出版物选择官方模板。</li>
+<li><a href="https://helpx.adobe.com/framemaker/user-guide.html/framemaker/using/structured-authoring-dita.ug.html" target="_blank" rel="noopener noreferrer">Adobe FrameMaker — Structured Authoring with DITA</a>：DITA 结构化创作入口。</li>
+<li><a href="https://www.dita-ot.org/" target="_blank" rel="noopener noreferrer">DITA Open Toolkit</a>：开源 DITA 发布工具链。</li>
+<li><a href="https://www.oxygenxml.com/xml_editor.html" target="_blank" rel="noopener noreferrer">oXygen XML Editor</a>：XML/DITA 创作与验证工具。</li>
+</ul>
+<h3 id="标准符号与单位">标准、符号与单位</h3>
+<ul>
+<li><a href="https://webstore.iec.ch/en/publication/2723" target="_blank" rel="noopener noreferrer">IEC 60617</a>：电工/电子图形符号数据库。</li>
+<li><a href="https://www.bipm.org/en/publications/si-brochure" target="_blank" rel="noopener noreferrer">BIPM — SI Brochure</a>：国际单位制权威指南。</li>
+<li><a href="https://webstore.iec.ch/" target="_blank" rel="noopener noreferrer">IEC Webstore</a> 与 <a href="https://www.iso.org/standards.html" target="_blank" rel="noopener noreferrer">ISO Standards</a>：查找适用标准的官方入口。</li>
+<li><a href="https://www.jedec.org/standards-documents" target="_blank" rel="noopener noreferrer">JEDEC Standards</a>：半导体相关标准和出版物入口。</li>
+</ul>
+<h3 id="图形eda-与器件库">图形、EDA 与器件库</h3>
+<ul>
+<li><a href="https://www.kicad.org/" target="_blank" rel="noopener noreferrer">KiCad</a> 与 <a href="https://www.kicad.org/libraries/" target="_blank" rel="noopener noreferrer">KiCad Libraries</a>：开源 EDA 工具及官方符号/封装库。</li>
+<li><a href="https://docs.kicad.org/" target="_blank" rel="noopener noreferrer">KiCad Documentation</a>：原理图、库和 PCB 工作流文档。</li>
+<li><a href="https://www.snapeda.com/" target="_blank" rel="noopener noreferrer">SnapEDA</a>：第三方 CAD 符号、封装和模型库。</li>
+<li><a href="https://www.ultralibrarian.com/" target="_blank" rel="noopener noreferrer">Ultra Librarian</a>：第三方元器件 CAD 库。</li>
+<li><a href="https://schemdraw.readthedocs.io/" target="_blank" rel="noopener noreferrer">Schemdraw</a>：用于可复现说明性电路图的 Python 库。</li>
+<li><a href="https://wavedrom.com/" target="_blank" rel="noopener noreferrer">WaveDrom</a>：文本化数字时序图。</li>
+<li><a href="https://mermaid.js.org/" target="_blank" rel="noopener noreferrer">Mermaid</a> 与 <a href="https://plantuml.com/" target="_blank" rel="noopener noreferrer">PlantUML</a>：文本化框图、流程图和序列图。</li>
+<li><a href="https://inkscape.org/" target="_blank" rel="noopener noreferrer">Inkscape</a>：矢量图编辑与多面板图组装。</li>
+</ul>
+<hr>
+<blockquote><strong>最终原则：</strong> 专业性来自可验证的内容、明确的符号、受控的源文件和稳定的发布流程。先让读者不必猜测，再让版面足够精致；先保证可追溯，再追求自动化。</blockquote>
+<hr>
+<p class="author-credit"><strong>作者：</strong> <span class="author-name">Black Lee</span></p>
+<p class="author-credit"><strong>Contact me:</strong> <a href="mailto:Kcalb.eel@outlook.com">Kcalb.eel@outlook.com</a></p></main>
+  </div>
+</body>
+</html>

@@ -1,0 +1,708 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="GitHub 终端操作指南">
+  <title>GitHub 终端操作指南</title>
+  <style>
+:root { --ink:#17212b; --muted:#526372; --paper:#fff; --canvas:#eef3f7; --primary:#0c5f7a; --accent:#c88214; --soft:#e8f5f8; --line:#d7e1e7; --code:#102b3a; --shadow:0 16px 42px rgba(24,48,70,.10); }
+* { box-sizing:border-box; } html { scroll-behavior:smooth; } body { margin:0; color:var(--ink); background:linear-gradient(180deg,#f6f9fa 0,var(--canvas) 24rem); font:16px/1.78 "Noto Sans CJK SC","Microsoft YaHei","PingFang SC",system-ui,sans-serif; }
+body.theme-technical { --primary:#1b4d78; --accent:#e06c3d; --soft:#edf3fa; --code:#111827; } body.theme-academic { --primary:#303b46; --accent:#8c5b20; --soft:#f4f1e9; --code:#20252b; } body.theme-product { --primary:#5135a4; --accent:#e95584; --soft:#f5efff; --code:#251942; } body.theme-dark { --ink:#e8eff5; --muted:#bdcad5; --paper:#16222c; --canvas:#0b131a; --primary:#56c6d3; --accent:#f1b65c; --soft:#1d303b; --line:#344b59; --code:#0b1218; --shadow:none; }
+.masthead { padding:3.8rem 1.5rem 3.1rem; color:#fff; background:linear-gradient(118deg,#082d43 0%,var(--primary) 57%,#0a817d 100%); border-bottom:4px solid var(--accent); } .masthead-inner,.layout { max-width:1340px; margin:auto; }
+.eyebrow { margin:0 0 .8rem; color:#ffdf9f; font-size:.78rem; font-weight:800; letter-spacing:.14em; text-transform:uppercase; } h1 { max-width:1000px; margin:0; color:#fff; font:700 clamp(2rem,5vw,3.8rem)/1.18 Georgia,"Noto Serif CJK SC","Songti SC",serif; } .summary { max-width:820px; margin:1.1rem 0 0; color:#e4f3f5; font-size:1.06rem; }
+.layout { display:grid; grid-template-columns:minmax(220px,272px) minmax(0,1fr); gap:2rem; padding:2rem 1.5rem 4rem; align-items:start; } .toc { position:sticky; top:1.25rem; padding:1.15rem 1.2rem; border:1px solid var(--line); border-radius:14px; background:color-mix(in srgb,var(--paper) 90%,transparent); box-shadow:0 8px 22px rgba(25,60,80,.06); } .toc-title { margin:0 0 .65rem; color:var(--primary); font-size:.9rem; font-weight:800; } .toc ol { margin:0; padding-left:1.25rem; font-size:.88rem; line-height:1.55; } .toc li { margin:.42rem 0; } .toc a { color:var(--muted); text-decoration:none; } .toc a:hover { color:var(--primary); text-decoration:underline; }
+main { min-width:0; padding:clamp(1.6rem,4vw,4.2rem); border:1px solid var(--line); border-radius:18px; background:var(--paper); box-shadow:var(--shadow); } h2,h3 { scroll-margin-top:1.5rem; } h2 { margin:3.6rem 0 1.2rem; padding:.45rem 0 .45rem 1rem; color:var(--primary); border-left:5px solid var(--accent); font-size:clamp(1.45rem,3vw,2rem); line-height:1.32; } h3 { margin:2.15rem 0 .8rem; color:var(--primary); font-size:1.24rem; line-height:1.42; } p { margin:1rem 0; } strong { color:var(--primary); } body.theme-dark strong { color:#86dce5; } a { color:var(--primary); text-decoration:underline; text-decoration-color:color-mix(in srgb,var(--primary) 38%,transparent); text-underline-offset:.16em; } a:hover { color:var(--accent); text-decoration-color:currentColor; } a:focus-visible,button:focus-visible { outline:3px solid var(--accent); outline-offset:3px; }
+blockquote { margin:1.5rem 0; padding:1rem 1.2rem; color:var(--ink); border-left:4px solid var(--accent); border-radius:0 10px 10px 0; background:var(--soft); font-weight:600; } hr { height:1px; margin:2.8rem 0; border:0; background:linear-gradient(90deg,transparent,var(--line),transparent); } ul,ol { padding-left:1.55rem; } li { margin:.44rem 0; } li::marker { color:var(--primary); font-weight:800; } .check-item { list-style:none; margin-left:-1.4rem; } input[type="checkbox"] { accent-color:var(--primary); transform:translateY(1px); }
+code { padding:.12em .35em; color:#8a320d; border-radius:4px; background:#f8eee9; font: .9em "Cascadia Code",Consolas,monospace; } body.theme-dark code { color:#ffd2bd; background:#2a2020; } .code-block { overflow-x:auto; margin:1.35rem 0; padding:1.1rem 1.25rem; color:#e8f2f5; border:1px solid #173f52; border-radius:10px; background:var(--code); } .code-block code { padding:0; color:inherit; background:none; font-size:.87rem; line-height:1.65; }
+.table-wrap { overflow-x:auto; margin:1.35rem 0 1.8rem; border:1px solid var(--line); border-radius:10px; } table { width:100%; border-collapse:collapse; font-size:.93rem; } th,td { padding:.72rem .8rem; vertical-align:top; border-bottom:1px solid var(--line); text-align:left; } th { color:#fff; background:var(--primary); font-weight:750; line-height:1.45; } tr:nth-child(even) td { background:color-mix(in srgb,var(--soft) 45%,var(--paper)); } tr:last-child td { border-bottom:0; } .source-note { margin-top:3.5rem; padding-top:1rem; color:var(--muted); border-top:1px solid var(--line); font-size:.84rem; }
+@media (max-width:900px) { .layout { grid-template-columns:1fr; padding:1rem; } .toc { position:static; } main { padding:1.5rem; } .masthead { padding:2.8rem 1.25rem 2.5rem; } } @media print { @page { size:A4; margin:16mm 14mm 18mm; } body { color:#000; background:#fff; font-size:10.5pt; line-height:1.55; } .masthead { padding:0 0 5mm; color:#000; border:0; background:none; } .masthead h1,.masthead p,.eyebrow { color:#000; } .actions,.toc { display:none; } .layout { display:block; max-width:none; padding:0; } main { padding:0; border:0; border-radius:0; box-shadow:none; } h2 { margin-top:16mm; padding-left:0; color:#000; border-left:0; border-bottom:1pt solid #000; page-break-after:avoid; } h3 { color:#000; page-break-after:avoid; } a { color:#000; text-decoration:none; } a[href^="http"]::after { content:" (" attr(href) ")"; font-size:8pt; overflow-wrap:anywhere; } .table-wrap { overflow:visible; } table { font-size:8.7pt; } th { color:#000; background:#eee; } tr,img,pre,blockquote { break-inside:avoid; } .code-block { color:#000; border:1px solid #777; background:#f4f4f4; } .code-block code { color:#000; } code { color:#000; background:#eee; } }
+</style>
+</head>
+<body class="theme-technical">
+  <header class="masthead">
+    <div class="masthead-inner">
+      <p class="eyebrow">Polished Markdown publication</p>
+      <h1>GitHub 终端操作指南</h1>
+      <p class="summary">为屏幕阅读、分享与 A4 打印优化的 HTML 版本。</p>
+    </div>
+  </header>
+  <div class="layout">
+    <nav class="toc" aria-label="目录"><p class="toc-title">快速导航</p><ol><li><a href="#目录">目录</a></li><li><a href="#1-先建立正确的概念">1. 先建立正确的概念</a></li><li><a href="#2-名词与缩写词典">2. 名词与缩写词典</a></li><li><a href="#3-准备电脑与-github-账号">3. 准备电脑与 GitHub 账号</a></li><li><a href="#4-身份验证与账号安全">4. 身份验证与账号安全</a></li><li><a href="#5-创建第一个-github-仓库">5. 创建第一个 GitHub 仓库</a></li><li><a href="#6-已有本地文件上传到新仓库">6. 已有本地文件：上传到新仓库</a></li><li><a href="#7-日常维护下载修改上传">7. 日常维护：下载、修改、上传</a></li><li><a href="#8-文件操作新增修改重命名删除">8. 文件操作：新增、修改、重命名、删除</a></li><li><a href="#9-分支与-pull-request-协作">9. 分支与 Pull Request 协作</a></li><li><a href="#10-克隆fork复制和迁移别人的项目">10. 克隆、Fork、复制和迁移别人的项目</a></li><li><a href="#11-冲突与安全恢复">11. 冲突与安全恢复</a></li><li><a href="#12-github-上的项目维护工作">12. GitHub 上的项目维护工作</a></li><li><a href="#13-readme许可证忽略文件与大文件">13. README、许可证、忽略文件与大文件</a></li><li><a href="#14-copilot-cli-与-github-cli-的配合">14. Copilot CLI 与 GitHub CLI 的配合</a></li><li><a href="#15-常见问题排查">15. 常见问题排查</a></li><li><a href="#16-每日命令速查">16. 每日命令速查</a></li><li><a href="#17-从零开始的完整实战">17. 从零开始的完整实战</a></li><li><a href="#18-进阶学习路线">18. 进阶学习路线</a></li></ol></nav>
+    <main><blockquote><strong>适合谁：</strong> 刚注册 GitHub、刚安装 Copilot CLI，想用 Windows 或 macOS 终端管理代码和文件的初学者。   <strong>目标：</strong> 学会创建、克隆、复制、上传、修改、删除、备份和维护仓库，并能在遇到常见问题时安全恢复。   <strong>推荐环境：</strong> Windows PowerShell 或 macOS Terminal、Git、GitHub CLI（<code>gh</code>）。   <strong>重要说明：</strong> GitHub、Git 和 Copilot CLI 是不同产品。本指南中的 <code>git</code> 和 <code>gh</code> 命令在 Windows 与 macOS 上基本相同；目录切换、列出文件、创建文本文件等系统命令则按各自终端选择对应写法。</blockquote>
+<hr>
+<h2 id="目录">目录</h2>
+<ol>
+<li>[先建立正确的概念](#1-先建立正确的概念)</li>
+<li>[名词与缩写词典](#2-名词与缩写词典)</li>
+<li>[准备电脑与 GitHub 账号](#3-准备电脑与-github-账号)</li>
+<li>[身份验证与账号安全](#4-身份验证与账号安全)</li>
+<li>[创建第一个 GitHub 仓库](#5-创建第一个-github-仓库)</li>
+<li>[已有本地文件：上传到新仓库](#6-已有本地文件上传到新仓库)</li>
+<li>[日常维护：下载、修改、上传](#7-日常维护下载修改上传)</li>
+<li>[文件操作：新增、修改、重命名、删除](#8-文件操作新增修改重命名删除)</li>
+<li>[分支与 Pull Request 协作](#9-分支与-pull-request-协作)</li>
+<li>[克隆、Fork、复制和迁移别人的项目](#10-克隆fork复制和迁移别人的项目)</li>
+<li>[冲突与安全恢复](#11-冲突与安全恢复)</li>
+<li>[GitHub 上的项目维护工作](#12-github-上的项目维护工作)</li>
+<li>[README、许可证、忽略文件与大文件](#13-readme许可证忽略文件与大文件)</li>
+<li>[Copilot CLI 与 GitHub CLI 的配合](#14-copilot-cli-与-github-cli-的配合)</li>
+<li>[常见问题排查](#15-常见问题排查)</li>
+<li>[每日命令速查](#16-每日命令速查)</li>
+<li>[从零开始的完整实战](#17-从零开始的完整实战)</li>
+<li>[进阶学习路线](#18-进阶学习路线)</li>
+</ol>
+<hr>
+<h2 id="1-先建立正确的概念">1. 先建立正确的概念</h2>
+<h3 id="11-gitgithubgithub-clicopilot-cli-有什么区别">1.1 Git、GitHub、GitHub CLI、Copilot CLI 有什么区别？</h3>
+<div class="table-wrap"><table><thead><tr><th>名称</th><th>是什么</th><th>用途</th></tr></thead><tbody><tr><td><strong>Git</strong></td><td>分布式版本控制软件</td><td>在电脑上记录文件的版本历史、比较改动、创建分支和提交</td></tr><tr><td><strong>GitHub</strong></td><td>基于 Git 的网站和协作平台</td><td>在线存放仓库、与他人协作、审查改动、管理 Issue 和发布版本</td></tr><tr><td><strong>GitHub CLI（<code>gh</code>）</strong></td><td>GitHub 官方命令行程序</td><td>在终端创建仓库、管理 PR、Issue、Release 等 GitHub 功能</td></tr><tr><td><strong>GitHub Copilot CLI（<code>copilot</code>）</strong></td><td>AI 命令行助手</td><td>用自然语言咨询、解释或协助完成终端任务；具体功能取决于安装版本</td></tr><tr><td><strong>终端</strong></td><td>接收文字命令的程序</td><td>Windows 上可以使用 PowerShell、Windows Terminal 或 Git Bash</td></tr></tbody></table></div>
+<p><strong>记住：</strong><code>git push</code> 是 Git 命令；<code>gh repo create</code> 是 GitHub CLI 命令；<code>copilot</code> 是 Copilot CLI 命令。它们不能互相替代。</p>
+<h3 id="12-什么是仓库">1.2 什么是仓库？</h3>
+<p><strong>仓库（Repository，常简称 repo）</strong> 是一个项目文件夹及其版本历史。一个仓库通常包含：</p>
+<ul>
+<li><strong>工作文件：</strong> 代码、图片、文档、配置等。</li>
+<li><strong><code>.git</code> 目录：</strong> Git 用来保存本地版本历史和仓库设置的数据。不要手动删除或编辑它。</li>
+<li><strong>提交历史：</strong> 文件在不同时间点的记录。</li>
+</ul>
+<p>同一个仓库可以有多个副本：你电脑上的叫<strong>本地仓库</strong>，GitHub 上的叫<strong>远程仓库</strong>。它们不会在每次保存文件时自动同步，需要你明确地拉取或推送。</p>
+<h3 id="13-git-的四个区域">1.3 Git 的四个区域</h3>
+<pre class="code-block"><code class="language-text">工作区                 暂存区                    本地仓库                 GitHub 远程仓库
+你正在编辑的文件  --git add--&gt;  下一次提交的候选内容  --git commit--&gt;  本地历史  --git push--&gt;  云端历史
+      ^                                                                      |
+      |-------------------------- git pull / git fetch ----------------------|</code></pre>
+<ul>
+<li><strong>工作区（working tree）：</strong> 磁盘上正在查看和编辑的文件。</li>
+<li><strong>暂存区（staging area / index）：</strong> 准备放进下一次提交的一组改动。它让你可以挑选哪些改动一起保存。</li>
+<li><strong>本地仓库：</strong> 电脑上的 <code>.git</code> 数据库，保存提交历史。</li>
+<li><strong>远程仓库：</strong> 例如 GitHub 上的仓库。</li>
+</ul>
+<p>最常用的流程是：</p>
+<pre class="code-block"><code class="language-text">编辑文件 → git status 检查 → git add 暂存 → git commit 保存到本地 → git push 上传到 GitHub</code></pre>
+<h3 id="14-保存提交上传不是一回事">1.4 保存、提交、上传不是一回事</h3>
+<ul>
+<li>在编辑器按 <strong>Ctrl+S</strong>：只把文件保存到电脑。</li>
+<li><code>git add</code>：选择要纳入下一次提交的文件改动。</li>
+<li><code>git commit</code>：创建本地历史记录；此时别人还看不到。</li>
+<li><code>git push</code>：将本地提交上传到 GitHub。</li>
+</ul>
+<p><span class="user-color" style="color: #2563eb">&lt;strong&gt;记住：&lt;/strong&gt;</span><strong>只保存文件不等于上传</strong>；<strong>提交（commit）也不等于推送（push）</strong>。</p>
+<blockquote>[!NOTE] 本指南用蓝色标记概念提示、用琥珀色标记操作注意事项、用红色标记可能造成损失的风险。颜色是辅助信息；即使预览器不显示行内颜色，文字标签和 GitHub 提示块仍会说明重点。</blockquote>
+<hr>
+<h2 id="2-名词与缩写词典">2. 名词与缩写词典</h2>
+<h3 id="21-git-常见词">2.1 Git 常见词</h3>
+<div class="table-wrap"><table><thead><tr><th>名词</th><th>英文或缩写</th><th>专业解释</th></tr></thead><tbody><tr><td>版本控制</td><td>Version Control</td><td>记录文件随时间发生的变化，并允许比较、恢复旧版本的技术</td></tr><tr><td>分布式版本控制系统</td><td>DVCS, Distributed Version Control System</td><td>每个完整克隆通常都带有提交历史，不必时刻连接中央服务器也能查看历史和提交</td></tr><tr><td>提交</td><td>Commit</td><td>一条指向项目快照的历史记录，包含作者信息、时间、说明和父提交</td></tr><tr><td>提交 ID</td><td>Commit hash / SHA</td><td>Git 为提交生成的内容标识；命令行通常显示其前几位短哈希</td></tr><tr><td>暂存</td><td>Stage</td><td>把指定改动放入暂存区，作为下一次提交的候选内容</td></tr><tr><td>分支</td><td>Branch</td><td>指向某条提交历史的可移动名称；常用来隔离功能开发</td></tr><tr><td>主分支</td><td>Main branch</td><td>项目默认或主要分支；常见名称为 <code>main</code>，旧项目也可能叫 <code>master</code></td></tr><tr><td>合并</td><td>Merge</td><td>将另一个分支上的提交整合到当前分支</td></tr><tr><td>变基</td><td>Rebase</td><td>把一组提交重新应用到新的起点，可能改写提交 ID；不要随意改写别人已经使用的公共历史</td></tr><tr><td>冲突</td><td>Conflict</td><td>Git 无法自动判断两处修改应该如何合并，需要人来选择正确内容</td></tr><tr><td>标签</td><td>Tag</td><td>给某个提交加上固定名称，常用于标记软件版本，如 <code>v1.2.0</code></td></tr><tr><td>HEAD</td><td>HEAD</td><td>表示当前检出的提交或分支位置</td></tr><tr><td>工作树</td><td>Working tree</td><td>仓库中当前检出的文件和目录</td></tr><tr><td>检出</td><td>Checkout</td><td>旧式常用命令，可切换分支或恢复文件；新手优先用 <code>git switch</code> 切分支、<code>git restore</code> 恢复文件</td></tr><tr><td>远程</td><td>Remote</td><td>对另一个仓库的本地命名连接</td></tr><tr><td><code>origin</code></td><td>默认远程名</td><td><code>git clone</code> 通常自动为克隆来源设置的远程别名；名字可以更改</td></tr><tr><td>上游</td><td>Upstream</td><td>被 Fork 的原始仓库；也常泛指当前分支跟踪的远程分支，需结合上下文理解</td></tr><tr><td>跟踪分支</td><td>Tracking branch</td><td>本地分支关联的远程分支，便于不写完整参数地执行 <code>git pull</code> 或 <code>git push</code></td></tr><tr><td>快进合并</td><td>Fast-forward</td><td>当前分支没有分叉提交时，Git 只需移动分支指针即可完成的合并</td></tr><tr><td>分离头指针</td><td>Detached HEAD</td><td>当前直接检出某个提交而非分支；新提交可能不属于任何分支，初学者应先创建分支再继续工作</td></tr></tbody></table></div>
+<h3 id="22-github-协作词">2.2 GitHub 协作词</h3>
+<div class="table-wrap"><table><thead><tr><th>名词</th><th>英文或缩写</th><th>专业解释</th></tr></thead><tbody><tr><td>派生</td><td>Fork</td><td>在 GitHub 上把别人的仓库复制到自己账号下，形成关联副本，常用于参与开源项目</td></tr><tr><td>克隆</td><td>Clone</td><td>把远程仓库下载到本地电脑；通常包含 Git 历史，但不会自动在自己账号下创建新仓库</td></tr><tr><td>拉取请求</td><td>Pull Request（PR）</td><td>请求仓库维护者把一个分支的改动审查并合并到另一个分支</td></tr><tr><td>议题</td><td>Issue</td><td>GitHub 上跟踪问题、想法、任务或讨论的记录</td></tr><tr><td>代码审查</td><td>Code review</td><td>在合并前阅读改动、评论并提出建议的过程</td></tr><tr><td>CI</td><td>Continuous Integration，持续集成</td><td>每次提交或 PR 时自动运行构建、检查或测试</td></tr><tr><td>CD</td><td>Continuous Delivery/Deployment，持续交付/部署</td><td>自动准备发布或部署变更的流程；具体含义依团队实践而异</td></tr><tr><td>GitHub Actions</td><td>—</td><td>GitHub 的自动化平台，可运行 CI、发布和部署工作流</td></tr><tr><td>Release</td><td>发布版本</td><td>以标签为基础发布的版本说明和可下载产物</td></tr><tr><td>仓库可见性</td><td>Public / Private</td><td>Public 仓库通常任何人都能查看；Private 仓库仅获授权的人可以查看</td></tr><tr><td>权限</td><td>Permission / Role</td><td>决定用户能否读取、推送、管理或删除仓库的访问级别</td></tr><tr><td>许可证</td><td>License</td><td>说明他人可以如何使用、修改、分发项目的法律条款</td></tr><tr><td>贡献指南</td><td>CONTRIBUTING</td><td>告诉贡献者如何报告问题、提交改动和遵循项目规范的文档</td></tr></tbody></table></div>
+<h3 id="23-常见命令对比">2.3 常见命令对比</h3>
+<div class="table-wrap"><table><thead><tr><th>容易混淆的词</th><th>区别</th></tr></thead><tbody><tr><td><code>git add</code> 与 <code>git commit</code></td><td><code>add</code> 选择改动；<code>commit</code> 把暂存内容记录到本地历史</td></tr><tr><td><code>commit</code> 与 <code>push</code></td><td><code>commit</code> 保存到本地；<code>push</code> 上传本地提交</td></tr><tr><td><code>fetch</code> 与 <code>pull</code></td><td><code>fetch</code> 下载远程更新但不合并进当前分支；<code>pull</code> 通常是下载后再整合</td></tr><tr><td><code>clone</code> 与 <code>fork</code></td><td><code>clone</code> 是下载到电脑；<code>fork</code> 是在 GitHub 上复制到自己的账号</td></tr><tr><td><code>merge</code> 与 <code>rebase</code></td><td>都能整合改动；<code>merge</code> 保留分支汇合记录，<code>rebase</code> 重新应用提交并可能改写历史</td></tr><tr><td><code>restore</code> 与 <code>reset</code></td><td><code>restore</code> 常用于恢复文件或取消暂存；<code>reset</code> 移动当前分支/HEAD，错误用法可能丢失未提交内容</td></tr><tr><td><code>revert</code> 与 <code>reset</code></td><td><code>revert</code> 生成一个新提交来抵消旧提交，通常适合已推送历史；<code>reset</code> 改写本地分支位置</td></tr></tbody></table></div>
+<hr>
+<h2 id="3-准备电脑与-github-账号">3. 准备电脑与 GitHub 账号</h2>
+<h3 id="31-需要安装什么">3.1 需要安装什么？</h3>
+<ol>
+<li><strong>Git：</strong> Windows 用户可从 <a href="https://git-scm.com/" target="_blank" rel="noopener noreferrer">git-scm.com</a> 安装 Git for Windows；macOS 通常可安装 Xcode Command Line Tools（运行 <code>git --version</code> 时系统可能提示安装），或使用 Homebrew：</li>
+</ol>
+<p>``<code>sh xcode-select --install </code>``</p>
+<p>或：</p>
+<p>``<code>sh brew install git </code>``</p>
+<ol>
+<li><strong>终端：</strong> Windows 可使用 PowerShell 或 Windows Terminal；macOS 可使用系统自带的 Terminal（终端）应用，也可使用 iTerm2。macOS 默认 shell 通常为 zsh。</li>
+<li><strong>GitHub CLI（<code>gh</code>）：</strong> GitHub 官方命令行工具。Windows 可在 PowerShell 执行：</li>
+</ol>
+<p>``<code>powershell winget install --id GitHub.cli </code>``</p>
+<p>macOS 若已安装 Homebrew，可执行：</p>
+<p>``<code>sh brew install gh </code>``</p>
+<p>安装完成后关闭并重新打开终端，再检查：</p>
+<p>``<code>powershell git --version gh --version </code>``</p>
+<ol>
+<li><strong>可选编辑器：</strong> 例如 Visual Studio Code。可以在仓库目录运行 <code>code .</code> 打开项目；如果提示找不到 <code>code</code>，可使用编辑器菜单打开文件夹。</li>
+</ol>
+<h3 id="32-windows-powershell-提示">3.2 Windows PowerShell 提示</h3>
+<ul>
+<li>PowerShell 的提示符通常以 <code>PS</code> 开头；本指南的主要命令都适用于 PowerShell。</li>
+<li>路径有空格或特殊字符时，用引号包起来：</li>
+</ul>
+<p>``<code>powershell cd 'C:\Users\YourName\Documents\My Project' </code>``</p>
+<ul>
+<li><code>cd</code> 在 PowerShell 和 macOS Terminal 中都可以切换目录：</li>
+</ul>
+<p>``<code>powershell cd 'C:\Users\YourName\Documents\My Project' </code>``</p>
+<ul>
+<li>本指南的 <code>#</code> 注释用于解释命令，复制时可以连注释一起执行；若遇到多行命令报错，逐行执行并先确认当前目录。</li>
+<li>Git Bash 使用类 Unix 命令；PowerShell 与 Git Bash 的文件删除、复制等系统命令不完全相同。不要把 <code>rm -rf</code>、<code>cat &lt;&lt;EOF</code> 等 Bash 示例直接粘贴到 PowerShell。</li>
+</ul>
+<h3 id="33-macos-terminal-提示">3.3 macOS Terminal 提示</h3>
+<p>macOS 的 Terminal（终端）通常运行 zsh；较旧系统也可能使用 Bash。打开“应用程序 → 实用工具 → 终端”，或用 Spotlight 搜索“终端”。</p>
+<p>macOS 上安装工具并验证：</p>
+<pre class="code-block"><code class="language-sh">git --version
+gh --version</code></pre>
+<p>若没有 <code>gh</code> 且已安装 Homebrew：</p>
+<pre class="code-block"><code class="language-sh">brew install gh</code></pre>
+<p>以下是与 PowerShell 常用操作的对应写法：</p>
+<div class="table-wrap"><table><thead><tr><th>操作</th><th>Windows PowerShell</th><th>macOS Terminal（zsh/Bash）</th></tr></thead><tbody><tr><td>进入目录</td><td><code>Set-Location 'C:\Users\你的名字\Documents\My Project'</code></td><td><code>cd &quot;$HOME/Documents/My Project&quot;</code></td></tr><tr><td>显示当前目录</td><td><code>Get-Location</code></td><td><code>pwd</code></td></tr><tr><td>列出文件（包含隐藏项）</td><td><code>Get-ChildItem -Force</code></td><td><code>ls -la</code></td></tr><tr><td>查看文本文件</td><td><code>Get-Content README.md</code></td><td><code>cat README.md</code></td></tr><tr><td>显示 SSH 公钥</td><td><code>Get-Content &quot;$env:USERPROFILE\.ssh\id_ed25519.pub&quot;</code></td><td><code>cat ~/.ssh/id_ed25519.pub</code></td></tr><tr><td>创建简单 README</td><td><code>Set-Content -Path README.md -Value &quot;# 项目名称\</code>n\<code>n项目简介。&quot;</code></td><td><code>printf '# 项目名称\n\n项目简介。\n' &gt; README.md</code></td></tr></tbody></table></div>
+<p><code>$HOME</code> 表示 macOS 用户主目录，通常类似 <code>/Users/你的名字</code>。路径写法使用正斜杠 <code>/</code>；路径含空格时要加引号。不要在 macOS 复制 Windows 的 <code>C:\...</code> 路径，也不要把 PowerShell 专用的 <code>$env:USERPROFILE</code>、<code>Get-ChildItem</code>、<code>Set-Content</code> 原样粘贴到 zsh。</p>
+<p><strong>跨平台规则：</strong><code>git status</code>、<code>git add</code>、<code>git commit</code>、<code>git push</code>、<code>git pull</code>、<code>git switch</code>、<code>git remote</code>、<code>gh auth login</code> 等 Git/GitHub CLI 命令在两种系统上相同。路径参数尽量写成 <code>README.md</code>、<code>docs/notes.md</code> 这样的相对路径，不要把 Windows 的 <code>.\文件名</code> 用到 macOS。</p>
+<h3 id="34-设置提交者姓名与邮箱">3.4 设置提交者姓名与邮箱</h3>
+<p>Git 的作者姓名和邮箱会写入提交记录；它们是提交元数据，不是登录凭据。</p>
+<pre class="code-block"><code class="language-powershell">git config --global user.name &quot;你的姓名或昵称&quot;
+git config --global user.email &quot;你的邮箱&quot;
+git config --global init.defaultBranch main</code></pre>
+<ul>
+<li><code>--global</code>：对当前操作系统用户下的所有仓库生效。</li>
+<li><code>--local</code>：只对当前仓库生效，必须在仓库目录内运行。</li>
+<li>邮箱可以使用 GitHub 提供的隐私转发邮箱，避免把个人邮箱公开在提交记录中；到 GitHub <strong>Settings → Emails</strong> 查看设置。</li>
+<li>检查配置：</li>
+</ul>
+<p>``<code>powershell git config --global --list git config user.name git config user.email </code>``</p>
+<p>若希望某个仓库使用不同身份，进入该仓库后运行不带 <code>--global</code> 的设置命令。</p>
+<hr>
+<h2 id="4-身份验证与账号安全">4. 身份验证与账号安全</h2>
+<h3 id="41-推荐新手使用-gh-auth-login">4.1 推荐新手使用 <code>gh auth login</code></h3>
+<pre class="code-block"><code class="language-powershell">gh auth login</code></pre>
+<p>按终端提示选择 GitHub.com、HTTPS 或 SSH，并按说明在浏览器中完成授权。授权后检查：</p>
+<pre class="code-block"><code class="language-powershell">gh auth status</code></pre>
+<p><code>gh</code> 的登录状态主要用于 <code>gh</code> 命令；Git 推送使用 HTTPS 还是 SSH，仍由仓库的远程地址和 Git 凭据设置决定。选择 HTTPS 时，GitHub CLI 可以协助配置 Git 凭据。</p>
+<h3 id="42-https-与-ssh-是什么">4.2 HTTPS 与 SSH 是什么？</h3>
+<ul>
+<li><strong>HTTPS：</strong> 仓库地址以 <code>https://github.com/</code> 开头。Git 认证由安全凭据管理器或已授权工具处理。</li>
+<li><strong>SSH（Secure Shell，安全外壳）：</strong> 仓库地址常为 <code>git@github.com:用户名/仓库.git</code>，通过一对密钥进行认证。</li>
+<li>GitHub 不接受账号登录密码作为 Git HTTPS 密码。需要凭据时，应使用授权流程或 Personal Access Token（个人访问令牌，PAT）；不要把账号密码当作 PAT。</li>
+</ul>
+<p>查看当前仓库使用的远程地址：</p>
+<pre class="code-block"><code class="language-powershell">git remote -v</code></pre>
+<p>更改为 HTTPS 地址：</p>
+<pre class="code-block"><code class="language-powershell">git remote set-url origin https://github.com/用户名/仓库名.git</code></pre>
+<p>更改为 SSH 地址：</p>
+<pre class="code-block"><code class="language-powershell">git remote set-url origin git@github.com:用户名/仓库名.git</code></pre>
+<h3 id="43-ssh-密钥可选">4.3 SSH 密钥（可选）</h3>
+<p><strong>公钥</strong> 可以添加到 GitHub；<strong>私钥</strong> 必须只留在自己的电脑，绝不能上传、发给别人或粘贴到聊天窗口。</p>
+<pre class="code-block"><code class="language-powershell">ssh-keygen -t ed25519 -C &quot;你的邮箱&quot;</code></pre>
+<p>按提示选择保存位置并设置密钥口令。之后查看公钥：</p>
+<pre class="code-block"><code class="language-powershell">Get-Content &quot;$env:USERPROFILE\.ssh\id_ed25519.pub&quot;</code></pre>
+<p>macOS Terminal：</p>
+<pre class="code-block"><code class="language-sh">cat ~/.ssh/id_ed25519.pub</code></pre>
+<p>在 GitHub 的 <strong>Settings → SSH and GPG keys → New SSH key</strong> 中粘贴公钥，然后测试：</p>
+<pre class="code-block"><code class="language-powershell">ssh -T git@github.com</code></pre>
+<p>首次连接可能会询问是否信任 GitHub 主机；确认主机名正确后按提示操作。私钥通常为 <code>id_ed25519</code>（没有 <code>.pub</code> 后缀）；不要分享它。</p>
+<h3 id="44-pat个人访问令牌安全规则">4.4 PAT（个人访问令牌）安全规则</h3>
+<ul>
+<li>PAT 是可代表你执行操作的秘密凭据，应像密码一样保管。</li>
+<li>优先使用 GitHub 的 <strong>Fine-grained personal access token（细粒度个人访问令牌）</strong>，只授予需要的仓库和权限，并设置有效期。</li>
+<li>不要把 PAT 写进代码、命令脚本、公开 Issue、README 或远程 URL。</li>
+<li>不建议使用 <code>git config --global credential.helper store</code>：它可能以明文保存凭据。</li>
+<li>如果令牌泄露，立即到 GitHub 设置中撤销并重新生成；只删除文件中的令牌不能保证它已从 Git 历史中消失。</li>
+</ul>
+<blockquote>[!CAUTION] <span class="user-color" style="color: #b91c1c">&lt;strong&gt;凭据泄露时应立即撤销或轮换。&lt;/strong&gt;</span>不要把 PAT、验证码、恢复码或私钥粘贴到聊天工具中。</blockquote>
+<h3 id="45-保护账号">4.5 保护账号</h3>
+<ul>
+<li>开启 GitHub <strong>双因素认证（2FA）</strong>，并安全保存恢复码。</li>
+<li>使用密码管理器保存密码和恢复信息。</li>
+<li>检查新授权的 OAuth 应用、SSH key 和 PAT，撤销不再使用的凭据。</li>
+<li>不要把验证码、恢复码、私钥、PAT 或 API key 交给 Copilot 或其他聊天工具。</li>
+</ul>
+<hr>
+<h2 id="5-创建第一个-github-仓库">5. 创建第一个 GitHub 仓库</h2>
+<h3 id="51-在-github-网页创建">5.1 在 GitHub 网页创建</h3>
+<ol>
+<li>登录 GitHub，点击右上角 <strong>+ → New repository</strong>。</li>
+<li>填写仓库名称，例如 <code>hello-github</code>。建议使用简短、清晰、便于输入的英文名称。</li>
+<li>选择 <strong>Public</strong>（公开）或 <strong>Private</strong>（私有）。公开仓库的内容可能被任何人查看、克隆和保存。</li>
+<li>可选择创建 <code>README</code>、<code>.gitignore</code> 模板和许可证。</li>
+<li>点击 <strong>Create repository</strong>。</li>
+</ol>
+<p>新手建议：如果仓库要存代码，先选择适合项目语言的 <code>.gitignore</code>；如果项目计划让别人使用，先了解许可证并选择合适的开源许可证。不要误把别人的代码作为自己的原创内容。</p>
+<h3 id="52-用-gh-创建空仓库">5.2 用 <code>gh</code> 创建空仓库</h3>
+<p>先确认已经登录：</p>
+<pre class="code-block"><code class="language-powershell">gh auth status</code></pre>
+<p>创建公开仓库：</p>
+<pre class="code-block"><code class="language-powershell">gh repo create hello-github --public</code></pre>
+<p>创建私有仓库：</p>
+<pre class="code-block"><code class="language-powershell">gh repo create hello-github --private</code></pre>
+<p>按照提示选择是否克隆到本地、是否添加 README 等。若只创建了 GitHub 上的空仓库，之后用 <code>git clone</code> 下载：</p>
+<pre class="code-block"><code class="language-powershell">gh repo clone 你的用户名/hello-github
+cd hello-github</code></pre>
+<p>也可以使用：</p>
+<pre class="code-block"><code class="language-powershell">git clone https://github.com/你的用户名/hello-github.git
+cd hello-github</code></pre>
+<h3 id="53-空仓库和带-readme-的仓库">5.3 空仓库和带 README 的仓库</h3>
+<p>GitHub 创建的 README、许可证或 <code>.gitignore</code> 本身可能已经形成第一次提交。此时不要再把一个有独立历史的本地仓库直接推上去而不先处理两边历史。新手最简单的做法是<strong>先克隆 GitHub 仓库，再把本地文件放进克隆目录</strong>，随后正常提交和推送。</p>
+<hr>
+<h2 id="6-已有本地文件上传到新仓库">6. 已有本地文件：上传到新仓库</h2>
+<p>适用于电脑上已经有项目文件夹，想把它首次上传到自己的 GitHub。</p>
+<h3 id="61-先建-github-远程仓库">6.1 先建 GitHub 远程仓库</h3>
+<p>在 GitHub 网站创建一个新仓库。若本地文件夹已经有内容，创建时暂时不要勾选添加 README、许可证或 <code>.gitignore</code>，这样 GitHub 仓库保持空白，初次推送更简单。</p>
+<h3 id="62-检查本地文件夹">6.2 检查本地文件夹</h3>
+<p>把下面路径替换为你的实际路径。带空格的路径一定加引号：</p>
+<pre class="code-block"><code class="language-powershell">Set-Location 'C:\Users\YourName\Documents\MyProject'
+Get-Location
+Get-ChildItem -Force</code></pre>
+<p>macOS Terminal 中使用：</p>
+<pre class="code-block"><code class="language-sh">cd &quot;$HOME/Documents/MyProject&quot;
+pwd
+ls -la</code></pre>
+<p><code>Get-Location</code> / <code>pwd</code> 显示当前目录；<code>Get-ChildItem -Force</code> / <code>ls -la</code> 列出目录内容。确认这里是你打算上传的项目，而不是上一级或其他目录。</p>
+<h3 id="63-上传全新文件夹">6.3 上传全新文件夹</h3>
+<pre class="code-block"><code class="language-powershell">git init
+git branch -M main
+git status
+git add README.md
+git diff --staged
+git commit -m &quot;docs: add project README&quot;
+git remote add origin https://github.com/你的用户名/仓库名.git
+git push -u origin main</code></pre>
+<p>如果还没有 README，可先创建一个。Windows PowerShell：</p>
+<pre class="code-block"><code class="language-powershell">Set-Content -Path README.md -Value &quot;# 项目名称`n`n项目简介。&quot;</code></pre>
+<p>macOS Terminal：</p>
+<pre class="code-block"><code class="language-sh">printf '# 项目名称\n\n项目简介。\n' &gt; README.md</code></pre>
+<p>若项目有多个文件，先检查 <code>.gitignore</code>，然后可以用 <code>git add -A</code> 暂存所有新增、修改和删除的跟踪文件。首次上传尤其要先检查暂存内容：</p>
+<pre class="code-block"><code class="language-powershell">git add -A
+git status
+git diff --staged</code></pre>
+<p>确认没有密码、令牌、个人隐私、缓存、依赖目录或不应该公开的文件后，再提交和推送。</p>
+<h3 id="64-命令解释">6.4 命令解释</h3>
+<ul>
+<li><code>git init</code>：在当前目录创建本地 Git 仓库。务必先检查当前目录。</li>
+<li><code>git branch -M main</code>：把当前分支重命名为 <code>main</code>。</li>
+<li><code>git add README.md</code>：暂存指定文件；<code>git add -A</code> 暂存所有变化。</li>
+<li><code>git diff --staged</code>：查看即将提交的具体内容。</li>
+<li><code>git commit -m &quot;...&quot;</code>：创建提交；<code>-m</code> 后面是提交说明。</li>
+<li><code>git remote add origin URL</code>：给 GitHub 仓库地址设置别名 <code>origin</code>。</li>
+<li><code>git push -u origin main</code>：第一次把 <code>main</code> 推送到 <code>origin</code>，并建立跟踪关系；之后通常可用 <code>git push</code>。</li>
+</ul>
+<p>提交说明可以用中文或英文，关键是准确。例如：</p>
+<pre class="code-block"><code class="language-text">docs: 添加项目使用说明
+feat: 新增图片上传功能
+fix: 修复文件名包含空格时的错误</code></pre>
+<h3 id="65-已有-github-仓库时上传本地文件">6.5 已有 GitHub 仓库时上传本地文件</h3>
+<p>先克隆仓库，再复制文件进去，是更安全的初学者做法：</p>
+<pre class="code-block"><code class="language-powershell">gh repo clone 你的用户名/仓库名
+cd 仓库名</code></pre>
+<p>然后使用文件管理器把项目文件复制到这个目录（不要覆盖 <code>.git</code> 目录），再运行：</p>
+<pre class="code-block"><code class="language-powershell">git status
+git add -A
+git diff --staged
+git commit -m &quot;feat: 导入项目文件&quot;
+git push</code></pre>
+<hr>
+<h2 id="7-日常维护下载修改上传">7. 日常维护：下载、修改、上传</h2>
+<h3 id="71-每次开始工作">7.1 每次开始工作</h3>
+<p>进入仓库目录。Windows PowerShell 示例：</p>
+<pre class="code-block"><code class="language-powershell">cd 'C:\Users\YourName\Documents\仓库名'</code></pre>
+<p>macOS Terminal 示例：</p>
+<pre class="code-block"><code class="language-sh">cd &quot;$HOME/Documents/仓库名&quot;</code></pre>
+<p>确认所在位置、分支和工作状态：</p>
+<pre class="code-block"><code class="language-powershell">pwd
+git status
+git branch --show-current</code></pre>
+<p>若当前没有自己未提交的改动，先下载远程更新：</p>
+<pre class="code-block"><code class="language-powershell">git pull</code></pre>
+<p><code>git pull</code> 可能整合远程的新提交。如果有未提交改动，Git 可能拒绝拉取；不要为了消除提示就运行 <code>reset --hard</code>，应先阅读第 11 节。</p>
+<h3 id="72-完成一组修改">7.2 完成一组修改</h3>
+<p>编辑文件后，按这个顺序检查和上传：</p>
+<pre class="code-block"><code class="language-powershell">git status
+git diff
+git add README.md
+git diff --staged
+git commit -m &quot;docs: 更新安装说明&quot;
+git push</code></pre>
+<p>如果改动涉及多个明确文件，逐个暂存：</p>
+<pre class="code-block"><code class="language-powershell">git add README.md src/app.js</code></pre>
+<p>如果你确实要纳入当前仓库的所有文件变化，可用：</p>
+<pre class="code-block"><code class="language-powershell">git add -A
+git status
+git diff --staged</code></pre>
+<p><strong>新手安全习惯：</strong> 不要盲目复制 <code>git add .</code> 或 <code>git add -A</code> 后立刻提交。先用 <code>git status</code> 和 <code>git diff --staged</code> 确认具体将上传哪些文件。</p>
+<h3 id="73-检查差异">7.3 检查差异</h3>
+<pre class="code-block"><code class="language-powershell">git diff</code></pre>
+<p>显示工作区相对暂存区的改动。查看已暂存、即将提交的内容：</p>
+<pre class="code-block"><code class="language-powershell">git diff --staged</code></pre>
+<p>查看当前目录状态：</p>
+<pre class="code-block"><code class="language-powershell">git status</code></pre>
+<p>查看最近提交：</p>
+<pre class="code-block"><code class="language-powershell">git log --oneline --decorate -10</code></pre>
+<h3 id="74-确认远程连接">7.4 确认远程连接</h3>
+<pre class="code-block"><code class="language-powershell">git remote -v</code></pre>
+<p>输出中的 <code>origin</code> 是远程别名，后面是 URL。若地址错误：</p>
+<pre class="code-block"><code class="language-powershell">git remote set-url origin https://github.com/正确用户名/正确仓库名.git</code></pre>
+<hr>
+<h2 id="8-文件操作新增修改重命名删除">8. 文件操作：新增、修改、重命名、删除</h2>
+<h3 id="81-新增文件">8.1 新增文件</h3>
+<p>在文件管理器或编辑器中创建文件，然后：</p>
+<pre class="code-block"><code class="language-powershell">git status
+git add notes.md
+git diff --staged
+git commit -m &quot;docs: 添加笔记&quot;
+git push</code></pre>
+<h3 id="82-修改文件">8.2 修改文件</h3>
+<p>编辑并保存之后：</p>
+<pre class="code-block"><code class="language-powershell">git diff
+git add README.md
+git diff --staged
+git commit -m &quot;docs: 修正项目说明&quot;
+git push</code></pre>
+<h3 id="83-删除文件并同步到-github">8.3 删除文件并同步到 GitHub</h3>
+<p>用 Git 删除文件，Git 会记录删除动作：</p>
+<pre class="code-block"><code class="language-powershell">git rm old-file.txt
+git status
+git commit -m &quot;chore: 删除旧文件&quot;
+git push</code></pre>
+<p>删除目录及其被 Git 跟踪的内容：</p>
+<pre class="code-block"><code class="language-powershell">git rm -r old-folder</code></pre>
+<p>也可以先在文件管理器里删除，再使用 <code>git add -A</code> 记录删除。<strong>仅在电脑上删除文件不会自动删除 GitHub 上的文件</strong>；需要提交并推送删除记录。</p>
+<h3 id="84-重命名或移动">8.4 重命名或移动</h3>
+<pre class="code-block"><code class="language-powershell">git mv old-name.txt new-name.txt
+git mv notes.txt docs/notes.txt
+git status
+git commit -m &quot;refactor: 整理文档位置&quot;
+git push</code></pre>
+<p>Git 根据文件内容相似度在历史中识别重命名；Git 本身记录的是内容变化。</p>
+<h3 id="85-只让-git-不再跟踪文件但保留电脑上的文件">8.5 只让 Git 不再跟踪文件，但保留电脑上的文件</h3>
+<pre class="code-block"><code class="language-powershell">git rm --cached local-settings.json</code></pre>
+<p>对目录可加 <code>-r</code>。如果该文件不应再次提交，还要把相应路径添加到 <code>.gitignore</code>。这只会影响之后的提交，<strong>不会把它从过去的提交历史中抹掉</strong>；若里面曾有凭据，应立即撤销或轮换凭据。</p>
+<h3 id="86-删除-github-上的整个仓库">8.6 删除 GitHub 上的整个仓库</h3>
+<p>删除仓库与删除单个文件不同，可能影响协作者且不一定容易恢复。必须是仓库管理员或拥有相应权限的人：</p>
+<ol>
+<li>打开仓库网页。</li>
+<li>进入 <strong>Settings → General → Danger Zone → Delete this repository</strong>。</li>
+<li>仔细阅读提示并确认仓库名称。</li>
+</ol>
+<p>如只想清理内容而保留仓库，优先逐项删除文件、提交并推送；这仍会把旧内容留在 Git 历史中。执行破坏性操作之前先确认是否需要备份。</p>
+<hr>
+<h2 id="9-分支与-pull-request-协作">9. 分支与 Pull Request 协作</h2>
+<h3 id="91-为什么用分支">9.1 为什么用分支？</h3>
+<p><strong>分支（branch）</strong> 让你可以在不直接改动主线的情况下完成一项工作。新手推荐：</p>
+<pre class="code-block"><code class="language-text">更新 main → 创建工作分支 → 修改并提交 → 推送分支 → 创建 PR → 检查并合并</code></pre>
+<p>这样可以在合并前查看差异，也能让协作者审查改动。</p>
+<h3 id="92-创建切换和查看分支">9.2 创建、切换和查看分支</h3>
+<pre class="code-block"><code class="language-powershell">git branch
+git switch -c docs/improve-guide</code></pre>
+<p><code>git switch -c</code> 创建并切换到新分支。之后确认：</p>
+<pre class="code-block"><code class="language-powershell">git branch --show-current</code></pre>
+<p>切换回主分支：</p>
+<pre class="code-block"><code class="language-powershell">git switch main</code></pre>
+<p>查看本地与远程分支：</p>
+<pre class="code-block"><code class="language-powershell">git branch -a</code></pre>
+<h3 id="93-将分支推送到-github">9.3 将分支推送到 GitHub</h3>
+<pre class="code-block"><code class="language-powershell">git add -A
+git diff --staged
+git commit -m &quot;docs: 改进操作指南&quot;
+git push -u origin docs/improve-guide</code></pre>
+<p><code>-u</code> 让本地分支关联远程同名分支；后续在此分支通常可直接 <code>git push</code> 和 <code>git pull</code>。</p>
+<h3 id="94-创建-pr-并合并">9.4 创建 PR 并合并</h3>
+<p><strong>Pull Request（PR，拉取请求）</strong> 是请求审查并合并改动的页面。用网页：</p>
+<ol>
+<li>推送分支后，打开仓库页面，点击提示中的 <strong>Compare &amp; pull request</strong>；也可以进入 <strong>Pull requests → New pull request</strong>。</li>
+<li>确认 <strong>base</strong> 是要接收改动的目标分支（通常是 <code>main</code>），<strong>compare</strong> 是你工作的分支。</li>
+<li>标题简洁描述改动；正文说明做了什么、为什么做、如何验证。</li>
+<li>创建 PR；检查文件差异、自动检查结果和评论。</li>
+<li>按评论修改同一分支并再次 <code>git push</code>，PR 会自动更新。</li>
+<li>获得批准并满足规则后，使用页面允许的合并方式合并。</li>
+<li>确认合并完成后，可删除已合并的工作分支。</li>
+</ol>
+<p>用 <code>gh</code> 创建 PR：</p>
+<pre class="code-block"><code class="language-powershell">gh pr create</code></pre>
+<p>按提示填写标题、正文和目标分支。常见命令：</p>
+<pre class="code-block"><code class="language-powershell">gh pr status
+gh pr list
+gh pr view
+gh pr checks</code></pre>
+<p><strong>Review（审查）</strong> 是对代码或文档改动的检查；合并权限和审批要求由仓库设置决定。</p>
+<h3 id="95-删除已合并分支">9.5 删除已合并分支</h3>
+<p>删除本地分支：</p>
+<pre class="code-block"><code class="language-powershell">git switch main
+git branch -d docs/improve-guide</code></pre>
+<p>删除 GitHub 上的远程分支：</p>
+<pre class="code-block"><code class="language-powershell">git push origin --delete docs/improve-guide</code></pre>
+<p><code>-d</code> 会保护尚未合并的分支。<code>-D</code> 会强制删除，可能让未合并提交难以找到；除非确认不需要，不要使用。</p>
+<hr>
+<h2 id="10-克隆fork复制和迁移别人的项目">10. 克隆、Fork、复制和迁移别人的项目</h2>
+<p>用户说“把别人的库搬到自己账号”，可能指不同事情。先明确目标：是本地查看、参与贡献、在自己账号保留关联副本，还是建立全新的独立仓库？</p>
+<h3 id="101-clone只下载到电脑">10.1 Clone：只下载到电脑</h3>
+<pre class="code-block"><code class="language-powershell">git clone https://github.com/作者名/项目名.git
+cd 项目名</code></pre>
+<p>克隆会在电脑上建立一个本地副本，通常包含完整 Git 历史。它<strong>不会自动在你的 GitHub 账号下创建仓库</strong>。是否能克隆取决于项目可见性和你的访问权限。</p>
+<h3 id="102-fork在-github-账号下建立关联副本">10.2 Fork：在 GitHub 账号下建立关联副本</h3>
+<p>在原仓库页面点 <strong>Fork</strong>，选择自己的账号。也可以用：</p>
+<pre class="code-block"><code class="language-powershell">gh repo fork 作者名/项目名</code></pre>
+<p>Fork 会在 GitHub 上创建一个与你账号关联的副本，通常用于向原项目贡献改动。若要在本地工作：</p>
+<pre class="code-block"><code class="language-powershell">gh repo clone 你的用户名/项目名
+cd 项目名
+git remote -v</code></pre>
+<p>通常 <code>origin</code> 指向你的 Fork；原仓库是上游。若没有 <code>upstream</code>，添加它：</p>
+<pre class="code-block"><code class="language-powershell">git remote add upstream https://github.com/作者名/项目名.git</code></pre>
+<p>从原仓库获取更新并合并到本地 <code>main</code>：</p>
+<pre class="code-block"><code class="language-powershell">git fetch upstream
+git switch main
+git merge upstream/main
+git push origin main</code></pre>
+<p>如果原仓库默认分支不是 <code>main</code>，先到其网页确认实际分支名，并替换命令中的 <code>main</code>。不要在未确认本地改动状态时合并。</p>
+<h3 id="103-参与开源贡献的标准步骤">10.3 参与开源贡献的标准步骤</h3>
+<ol>
+<li>阅读原项目的 README、LICENSE、CONTRIBUTING、行为准则和 Issue。</li>
+<li>Fork 原仓库并克隆自己的 Fork。</li>
+<li>创建工作分支：</li>
+</ol>
+<p>``<code>powershell git switch -c fix/typo-in-readme </code>``</p>
+<ol>
+<li>只做范围清楚的修改，运行项目要求的检查。</li>
+<li>检查、提交并推送：</li>
+</ol>
+<p>``<code>powershell git status git diff git add README.md git diff --staged git commit -m &quot;docs: fix README typo&quot; git push -u origin fix/typo-in-readme </code>``</p>
+<ol>
+<li>对原作者的仓库创建 PR。目标仓库是原项目，来源分支是你的 Fork 分支。</li>
+<li>按维护者反馈修改，等待审查和合并。</li>
+</ol>
+<h3 id="104-原样复制到自己账号先理解授权和署名">10.4 原样复制到自己账号：先理解授权和署名</h3>
+<p>“原封不动搬过来”不只是 Git 操作。<strong>能公开访问不等于可以任意去掉作者信息或许可证要求。</strong> 先检查原项目的 <code>LICENSE</code>、版权声明和使用条款，遵守署名、保留许可证、公开衍生作品等要求。没有许可证时，不能默认可以自由复制、修改或再发布；应先取得授权或咨询专业人士。</p>
+<p>通常有以下选择：</p>
+<ul>
+<li><strong>保留关联、贡献给原项目：</strong> 使用 Fork。</li>
+<li><strong>建立自己维护的独立副本且保留 Git 历史：</strong> 可以 Fork，或在确认授权后镜像仓库。</li>
+<li><strong>只想保存一个文件快照、不保留历史：</strong> 下载 ZIP 或复制工作文件，再创建新仓库；保留必要的许可证与版权声明。</li>
+<li><strong>迁移自己拥有的仓库及其协作记录：</strong> 在 GitHub 仓库设置中使用 Transfer ownership（转移所有权）等正式功能；这与普通克隆不同。</li>
+</ul>
+<p>不要把他人仓库改成自己的原创项目，不要删去作者署名或许可证，也不要绕过原项目的访问权限。</p>
+<h3 id="105-用-git-镜像复制仓库进阶谨慎">10.5 用 Git 镜像复制仓库（进阶，谨慎）</h3>
+<p>镜像通常会复制 Git 引用、分支和标签，但<strong>不等于复制 GitHub 的 Issue、PR、Actions 配置权限、Secrets、讨论、Stars 或全部项目设置</strong>。仅对自己有权复制的仓库使用；必须确认新仓库为空，并仔细检查公开范围。</p>
+<pre class="code-block"><code class="language-powershell">git clone --mirror https://github.com/来源用户名/来源仓库.git
+cd 来源仓库.git
+git push --mirror https://github.com/你的用户名/新仓库.git</code></pre>
+<p><code>--mirror</code> 会推送和同步所有 Git 引用，可能覆盖目标仓库已有引用。只在空的新仓库上操作；若不确定，请用 Fork 或 GitHub 提供的 Import/Transfer 流程。</p>
+<hr>
+<h2 id="11-冲突与安全恢复">11. 冲突与安全恢复</h2>
+<h3 id="111-什么是冲突">11.1 什么是冲突？</h3>
+<p>当两个分支修改了同一段内容，Git 可能无法判断哪边正确。文件中可能出现：</p>
+<pre class="code-block"><code class="language-text">&lt;&lt;&lt;&lt;&lt;&lt;&lt; HEAD
+当前分支的内容
+=======
+另一分支的内容
+&gt;&gt;&gt;&gt;&gt;&gt;&gt; 另一分支名称</code></pre>
+<p>这些标记只是冲突提示，不是最终内容。</p>
+<h3 id="112-解决合并冲突">11.2 解决合并冲突</h3>
+<ol>
+<li>运行 <code>git status</code>，确认哪些文件冲突。</li>
+<li>打开冲突文件，理解双方修改；编辑成最终应保留的完整内容。</li>
+<li>删除 <code>&lt;&lt;&lt;&lt;&lt;&lt;&lt;</code>、<code>=======</code>、<code>&gt;&gt;&gt;&gt;&gt;&gt;&gt;</code> 等冲突标记。</li>
+<li>保存后检查文件内容和差异。</li>
+<li>标记冲突已解决并完成提交：</li>
+</ol>
+<p>``<code>powershell git add 冲突文件名 git diff --staged git commit </code>``</p>
+<ol>
+<li>如这次合并来自 <code>git pull</code>，之后按需 <code>git push</code>。</li>
+</ol>
+<p>如果 Git 正在进行合并但决定放弃，可以运行：</p>
+<pre class="code-block"><code class="language-powershell">git merge --abort</code></pre>
+<p>若正在进行变基，使用：</p>
+<pre class="code-block"><code class="language-powershell">git rebase --abort</code></pre>
+<p>不要同时运行不匹配当前操作的 abort 命令。</p>
+<h3 id="113-撤销未提交改动">11.3 撤销未提交改动</h3>
+<p>先检查：</p>
+<pre class="code-block"><code class="language-powershell">git status
+git diff</code></pre>
+<p>丢弃某个文件在工作区的未提交修改：</p>
+<pre class="code-block"><code class="language-powershell">git restore -- 文件名</code></pre>
+<p><strong>这会丢弃该文件未暂存的内容，通常无法通过 Git 找回。</strong> 先确认没有需要保留的修改。</p>
+<p>取消某个文件的暂存、但保留电脑上的修改：</p>
+<pre class="code-block"><code class="language-powershell">git restore --staged -- 文件名</code></pre>
+<h3 id="114-撤销已提交内容">11.4 撤销已提交内容</h3>
+<p>已经推送或别人可能已拉取的提交，优先使用 <code>revert</code>：</p>
+<pre class="code-block"><code class="language-powershell">git log --oneline
+git revert 提交ID
+git push</code></pre>
+<p><code>revert</code> 会创建一个新提交来抵消目标提交，不会删除旧提交历史。</p>
+<p><code>reset</code> 会移动当前分支指针，可能丢弃提交或未提交改动。<code>git reset --hard</code> 有丢失工作内容的风险，不应作为日常“修复”命令。遇到不懂的报错时先停止，不要盲目复制危险命令。</p>
+<h3 id="115-恢复与备份的基本习惯">11.5 恢复与备份的基本习惯</h3>
+<ul>
+<li>提交前查看 <code>git status</code> 和 <code>git diff --staged</code>。</li>
+<li>正在进行的重要修改可以先创建分支或复制项目备份。</li>
+<li>删除本地文件夹前确认 GitHub 远程副本可用，且重要提交已经推送。</li>
+<li><code>git reflog</code> 可能帮助找回最近移动过的本地提交指针，但不是远程备份，也不能保证恢复所有未提交文件。</li>
+</ul>
+<hr>
+<h2 id="12-github-上的项目维护工作">12. GitHub 上的项目维护工作</h2>
+<h3 id="121-readme让别人知道如何使用项目">12.1 README：让别人知道如何使用项目</h3>
+<p>README 是仓库首页说明，建议至少写清：</p>
+<ul>
+<li>项目是什么、解决什么问题。</li>
+<li>主要功能或截图。</li>
+<li>安装和运行步骤。</li>
+<li>配置项说明，但不要放真实密码或密钥。</li>
+<li>使用示例、已知限制、如何报告问题。</li>
+<li>许可证及贡献方式（适用时）。</li>
+</ul>
+<p>Markdown（<code>.md</code>）是一种轻量标记语言；<code>#</code> 表示标题，<code>-</code> 表示列表，反引号用于代码。</p>
+<h3 id="122-issue记录问题和待办">12.2 Issue：记录问题和待办</h3>
+<p>创建 Issue 时尽量说明：</p>
+<ul>
+<li><strong>标题：</strong> 明确、可搜索。</li>
+<li><strong>背景：</strong> 发生了什么、期待什么。</li>
+<li><strong>复现步骤：</strong> 按步骤让别人能看到问题。</li>
+<li><strong>环境：</strong> 操作系统、软件版本等必要信息。</li>
+<li><strong>截图或日志：</strong> 删除令牌、个人信息等敏感内容后再上传。</li>
+</ul>
+<p>Issue 可以用标签分类、指派负责人并关联 PR。具体可用功能取决于仓库设置。</p>
+<h3 id="123-权限与协作者">12.3 权限与协作者</h3>
+<p>仓库所有者可在 <strong>Settings → Collaborators</strong>（界面名称可能略有变化）添加协作者。只授予完成工作所需的最低权限。不要把个人账号密码或 token 共享给协作者。</p>
+<p>私有仓库成员离开项目时，及时检查并撤销其访问权限。公开仓库的代码可见性不意味着他人拥有写入权限。</p>
+<h3 id="124-actions自动检查">12.4 Actions：自动检查</h3>
+<p><strong>GitHub Actions</strong> 可在指定事件发生时运行自动化工作流；配置文件通常放在 <code>.github/workflows/</code>。例如，仅让工作流在推送和 PR 时运行：</p>
+<pre class="code-block"><code class="language-yaml">name: Basic checks
+on: [push, pull_request]
+
+jobs:
+  inspect:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Show repository status
+        run: git status --short</code></pre>
+<p>真实项目应按其语言和工具配置构建与测试步骤。<strong>工作流可以运行代码并访问授权资源</strong>；使用第三方 Action 前检查其来源和权限，不要把秘密写入 YAML。工作流所需令牌应通过 GitHub Secrets 或受控权限提供。</p>
+<h3 id="125-tags-和-releases标记并发布版本">12.5 Tags 和 Releases：标记并发布版本</h3>
+<p>版本标签（Tag）通常形如 <code>v1.0.0</code>。创建附注标签并推送：</p>
+<pre class="code-block"><code class="language-powershell">git tag -a v1.0.0 -m &quot;Release v1.0.0&quot;
+git push origin v1.0.0</code></pre>
+<p>然后可以在 GitHub 网页的 <strong>Releases</strong> 页面基于该标签撰写版本说明并上传发布文件。创建版本前检查当前分支和提交，避免给错误内容打标签。</p>
+<hr>
+<h2 id="13-readme许可证忽略文件与大文件">13. README、许可证、忽略文件与大文件</h2>
+<h3 id="131-gitignore告诉-git-哪些文件通常不应提交">13.1 <code>.gitignore</code>：告诉 Git 哪些文件通常不应提交</h3>
+<p><code>.gitignore</code> 是仓库中的忽略规则文件。例如：</p>
+<pre class="code-block"><code class="language-gitignore"># 依赖与构建产物
+node_modules/
+dist/
+
+# 本地秘密和配置
+.env
+.env.local
+
+# 日志与系统文件
+*.log
+Thumbs.db
+.DS_Store</code></pre>
+<p>规则应按项目需要调整。不要为了“隐藏”秘密而只加 <code>.gitignore</code>：若文件已被 Git 跟踪，忽略规则不会自动停止跟踪。密码、令牌一旦提交过，应当作已泄露并立即撤销/轮换。</p>
+<h3 id="132-许可证与版权">13.2 许可证与版权</h3>
+<p>许可证（License）规定他人可如何使用、修改和分发项目。公开仓库没有许可证时，不能简单理解为“大家可以随意拿去用”。如果你引用或复制别人作品，应阅读许可证并保留它要求的版权和许可声明；不确定时先取得许可或寻求专业法律建议。</p>
+<h3 id="133-大文件">13.3 大文件</h3>
+<p>Git 适合记录文本和源文件，不适合反复提交大型二进制文件。GitHub 对单文件大小和仓库使用有平台限制；大文件可能需要 Git LFS（Large File Storage，大文件存储扩展）或其他文件托管方案。先查看 GitHub 当前官方限制，不要通过拆分或改名试图绕过平台政策。</p>
+<p>如果需要 Git LFS，先安装 Git LFS 并阅读项目说明，再跟踪相应文件类型；普通新手项目一般不需要提前配置。</p>
+<hr>
+<h2 id="14-copilot-cli-与-github-cli-的配合">14. Copilot CLI 与 GitHub CLI 的配合</h2>
+<h3 id="141-先区分问-ai与执行-git">14.1 先区分“问 AI”与“执行 Git”</h3>
+<ul>
+<li>Copilot CLI 适合请求解释命令、总结错误或协助编写命令。</li>
+<li><code>git</code> 和 <code>gh</code> 执行仓库与 GitHub 操作。</li>
+<li>AI 给出的命令不一定适合当前目录、分支、权限或操作系统；<strong>先读懂命令和影响，再执行</strong>。</li>
+</ul>
+<p>例如，可以请 Copilot CLI 解释：</p>
+<pre class="code-block"><code class="language-text">请用中文解释 git status 的输出，不要运行修改文件或 Git 历史的命令。</code></pre>
+<p>也可以问：</p>
+<pre class="code-block"><code class="language-text">我在 Windows PowerShell 或 macOS Terminal 中，如何查看当前仓库的远程 URL？请只给出只读命令并解释结果。</code></pre>
+<h3 id="142-执行前特别检查的命令">14.2 执行前特别检查的命令</h3>
+<p>看到以下操作时先暂停并理解影响：</p>
+<ul>
+<li><code>git reset --hard</code>：可能丢弃未提交的工作。</li>
+<li><code>git push --force</code> / <code>--force-with-lease</code>：可能改写远程历史。</li>
+<li><code>git clean -fd</code>：可能删除未跟踪文件。</li>
+<li><code>git rm -r</code>：递归删除被 Git 跟踪的目录内容。</li>
+<li><code>git push --mirror</code>：可能覆盖目标远程仓库引用。</li>
+<li>删除整个仓库或 <code>.git</code> 目录的命令。</li>
+</ul>
+<p><strong>不要把 access token、SSH 私钥、<code>.env</code> 文件或个人敏感数据贴给 AI。</strong> 处理仓库前，先让工具说明目标路径和将发生的更改。</p>
+<blockquote>[!WARNING] <span class="user-color" style="color: #a16207">&lt;strong&gt;执行前先确认影响范围：&lt;/strong&gt;</span><code>reset --hard</code>、强制推送、<code>git clean -fd</code> 和镜像推送都可能造成难以恢复的改动。</blockquote>
+<h3 id="143-gh-常用命令">14.3 <code>gh</code> 常用命令</h3>
+<pre class="code-block"><code class="language-powershell">gh auth status
+gh repo list
+gh repo view
+gh repo clone 用户名/仓库名
+gh issue list
+gh issue create
+gh pr list
+gh pr create
+gh pr view
+gh run list</code></pre>
+<p>有些命令需要在仓库目录中执行；不确定时用 <code>gh help</code> 或 <code>gh &lt;命令&gt; --help</code> 查看本机版本支持的参数。</p>
+<hr>
+<h2 id="15-常见问题排查">15. 常见问题排查</h2>
+<div class="table-wrap"><table><thead><tr><th>提示或现象</th><th>常见原因</th><th>安全的第一步</th></tr></thead><tbody><tr><td><code>fatal: not a git repository</code></td><td>当前目录不是仓库，或进入了错误文件夹</td><td>PowerShell 用 <code>Get-Location</code> / <code>Get-ChildItem -Force</code>，macOS 用 <code>pwd</code> / <code>ls -la</code> 检查目录；找正确的仓库目录</td></tr><tr><td><code>git</code> / <code>gh</code> 不是可识别命令</td><td>尚未安装，或安装后终端未重新打开、PATH 未更新</td><td>重新打开终端，再运行 <code>git --version</code> / <code>gh --version</code></td></tr><tr><td><code>Author identity unknown</code></td><td>未设置 Git 作者姓名或邮箱</td><td>按第 3 节设置 <code>user.name</code> 和 <code>user.email</code></td></tr><tr><td><code>remote origin already exists</code></td><td>当前仓库已有名为 <code>origin</code> 的远程</td><td>先运行 <code>git remote -v</code>；确认后用 <code>git remote set-url origin 正确地址</code></td></tr><tr><td><code>Authentication failed</code></td><td>登录、令牌、权限或远程地址有问题</td><td>检查 <code>gh auth status</code>、<code>git remote -v</code> 和仓库权限；不要把密码或 token 发给别人</td></tr><tr><td><code>Permission denied (publickey)</code></td><td>SSH key 未添加、未加载或远程地址使用 SSH</td><td>检查远程 URL；验证 SSH key 是否添加到正确 GitHub 账号，或改用 HTTPS</td></tr><tr><td><code>non-fast-forward</code> / <code>fetch first</code></td><td>远程有本地没有的提交</td><td>先 <code>git status</code>；确认本地改动已提交或备份，再 <code>git pull</code>，解决冲突后推送</td></tr><tr><td><code>src refspec main does not match any</code></td><td>当前没有名为 <code>main</code> 的本地分支或尚无提交</td><td>运行 <code>git branch --show-current</code> 和 <code>git status</code>，确认提交和分支名</td></tr><tr><td>文件改了但没出现在 GitHub</td><td>还没有暂存、提交或推送，或文件被忽略</td><td>运行 <code>git status</code>，检查 <code>.gitignore</code>，再逐步 add、commit、push</td></tr><tr><td>删除文件后 GitHub 仍有文件</td><td>删除没有提交或推送</td><td><code>git status</code> 检查删除记录，提交并推送</td></tr><tr><td><code>CONFLICT</code></td><td>两处改动无法自动合并</td><td>按第 11 节编辑冲突文件、检查内容，再 <code>git add</code> 和完成合并</td></tr><tr><td><code>detached HEAD</code></td><td>检出了提交而不是分支</td><td>若要保留当前状态，先运行 <code>git switch -c 新分支名</code></td></tr><tr><td>文件上传失败或被拒绝</td><td>文件过大、权限不足、分支保护或策略限制</td><td>读取完整错误信息，核对仓库规则与当前官方限制；不要用镜像或强推绕过</td></tr></tbody></table></div>
+<h3 id="排查时提供哪些信息">排查时提供哪些信息？</h3>
+<p>需要求助时，提供命令、完整错误信息、<code>git status</code> 输出和操作系统即可。发出前检查并遮盖用户名隐私、访问令牌、私钥、内部 URL 和个人文件路径。</p>
+<hr>
+<h2 id="16-每日命令速查">16. 每日命令速查</h2>
+<h3 id="先确认位置与状态">先确认位置与状态</h3>
+<pre class="code-block"><code class="language-powershell">pwd
+git status
+git branch --show-current
+git remote -v</code></pre>
+<h3 id="日常保存并上传">日常保存并上传</h3>
+<pre class="code-block"><code class="language-powershell">git status
+git diff
+git add 要提交的文件
+git diff --staged
+git commit -m &quot;简短说明改动&quot;
+git push</code></pre>
+<h3 id="获取远程更新">获取远程更新</h3>
+<pre class="code-block"><code class="language-powershell">git pull</code></pre>
+<h3 id="克隆仓库">克隆仓库</h3>
+<pre class="code-block"><code class="language-powershell">gh repo clone 用户名/仓库名</code></pre>
+<h3 id="新建分支">新建分支</h3>
+<pre class="code-block"><code class="language-powershell">git switch -c feature/简短名称</code></pre>
+<h3 id="查看历史">查看历史</h3>
+<pre class="code-block"><code class="language-powershell">git log --oneline --decorate -10</code></pre>
+<h3 id="查看帮助">查看帮助</h3>
+<pre class="code-block"><code class="language-powershell">git help status
+gh help
+gh pr --help</code></pre>
+<hr>
+<h2 id="17-从零开始的完整实战">17. 从零开始的完整实战</h2>
+<p>以下示例创建一个新仓库、上传文档，再通过分支和 PR 更新它。将 <code>你的用户名</code> 替换成自己的 GitHub 用户名。</p>
+<h3 id="第一步创建-github-仓库">第一步：创建 GitHub 仓库</h3>
+<p>在网页上创建 <code>my-first-project</code>，选择 Public 或 Private，并添加 README。然后克隆到电脑：</p>
+<pre class="code-block"><code class="language-powershell">gh auth status
+gh repo clone 你的用户名/my-first-project
+cd my-first-project
+git status</code></pre>
+<h3 id="第二步添加文件">第二步：添加文件</h3>
+<p>用编辑器在仓库目录创建 <code>notes.md</code>，写入内容并保存。检查文件状态：</p>
+<pre class="code-block"><code class="language-powershell">git status
+git diff</code></pre>
+<p>新文件还没有被 Git 跟踪时，<code>git diff</code> 不一定显示其内容；暂存后再看：</p>
+<pre class="code-block"><code class="language-powershell">git add notes.md
+git diff --staged</code></pre>
+<h3 id="第三步提交并推送">第三步：提交并推送</h3>
+<pre class="code-block"><code class="language-powershell">git commit -m &quot;docs: add project notes&quot;
+git push</code></pre>
+<p>刷新 GitHub 仓库网页，确认文件和提交已经出现。</p>
+<h3 id="第四步用分支修改">第四步：用分支修改</h3>
+<pre class="code-block"><code class="language-powershell">git switch -c docs/update-notes</code></pre>
+<p>编辑 <code>notes.md</code>，然后检查、提交、推送：</p>
+<pre class="code-block"><code class="language-powershell">git status
+git diff
+git add notes.md
+git diff --staged
+git commit -m &quot;docs: update project notes&quot;
+git push -u origin docs/update-notes</code></pre>
+<h3 id="第五步创建并合并-pr">第五步：创建并合并 PR</h3>
+<pre class="code-block"><code class="language-powershell">gh pr create</code></pre>
+<p>按提示创建 PR。打开 PR 页面，检查目标分支、改动内容和自动检查。确认无误并满足仓库规则后再合并。合并后更新本地 <code>main</code>：</p>
+<pre class="code-block"><code class="language-powershell">git switch main
+git pull</code></pre>
+<p>这套流程覆盖了最常见的工作：<strong>克隆 → 修改 → 检查 → 暂存 → 提交 → 推送 → PR → 合并 → 更新本地</strong>。</p>
+<hr>
+<h2 id="18-进阶学习路线">18. 进阶学习路线</h2>
+<div class="table-wrap"><table><thead><tr><th>阶段</th><th>学习内容</th><th>练习目标</th></tr></thead><tbody><tr><td>入门</td><td><code>status</code>、<code>add</code>、<code>commit</code>、<code>push</code>、<code>pull</code></td><td>创建一个个人仓库，上传并更新文档</td></tr><tr><td>熟练</td><td>分支、PR、Issue、冲突</td><td>完成一次分支开发和 PR 合并</td></tr><tr><td>协作</td><td>Fork、上游同步、代码审查、权限</td><td>阅读开源项目规则，提交小型文档修复</td></tr><tr><td>维护</td><td>README、LICENSE、<code>.gitignore</code>、Release</td><td>为自己的项目建立清晰说明和版本发布流程</td></tr><tr><td>自动化</td><td>Actions、CI、测试</td><td>让每次 PR 自动执行项目检查</td></tr><tr><td>进阶 Git</td><td><code>revert</code>、<code>reflog</code>、变基、标签、子模块</td><td>理解历史修改的风险，再在练习仓库中操作</td></tr></tbody></table></div>
+<h3 id="给初学者的十条安全原则">给初学者的十条安全原则</h3>
+<ol>
+<li>每次操作前先确认当前目录：PowerShell 用 <code>Get-Location</code>，macOS 用 <code>pwd</code>。</li>
+<li>不确定仓库状态时先运行 <code>git status</code>。</li>
+<li>先看 <code>git diff</code>，再看 <code>git diff --staged</code>，确认将提交的内容。</li>
+<li>只提交属于当前任务的文件，避免把整个电脑目录当成仓库。</li>
+<li>不提交密码、PAT、SSH 私钥、<code>.env</code>、浏览器数据或个人文件。</li>
+<li>不确定 <code>reset --hard</code>、强制推送、镜像推送的影响时，不要执行。</li>
+<li>公开仓库中的内容可能被复制、缓存或永久留存；不要把敏感文件推上去。</li>
+<li>Fork、复制和再发布别人的项目之前，先读许可证并保留必要的署名。</li>
+<li>遇到冲突先读 <code>git status</code> 和文件内容，不要为了“继续”而删除冲突文件。</li>
+<li>把 GitHub 当作协作与备份工具之一，但重要资料仍应有独立备份。</li>
+</ol>
+<blockquote><strong>学习目标不是背下所有命令，而是能解释命令会影响哪个目录、哪个分支、哪些文件，以及是否会改写历史。</strong> 先从安全、可检查的日常流程练起，再逐步学习高级 Git 操作。</blockquote><footer class="source-note">由 <code>Github_user_manual.md</code> 生成；Markdown 源文件未被修改。</footer></main>
+  </div>
+  
+</body>
+</html>
